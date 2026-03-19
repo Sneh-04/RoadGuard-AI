@@ -86,7 +86,7 @@ class ModelLoader:
         
         return self._load_status
     
-    def _load_model(self, model_path: str, model_name: str) -> Optional[keras.Model]:
+    def _load_model(self, model_path: str, model_name: str):
         """Load a single model from disk.
         
         Args:
