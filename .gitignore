@@ -1,0 +1,13 @@
+node_modules/
+mobile/node_modules/
+mobile/android/.gradle/
+mobile/android/build/
+mobile/android/app/build/
+__pycache__/
+*.pyc
+.expo/
+mobile/.expo/
+*.log
+data/
+models/*.keras
+models/*.pt

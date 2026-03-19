@@ -1,0 +1,20 @@
+{
+  "Stage1": {
+    "parameters": 40641,
+    "size_bytes": 210068,
+    "inference_time_per_sample": 0.0022887611389160157,
+    "flops": "see profiler logs"
+  },
+  "Stage2": {
+    "parameters": 40641,
+    "size_bytes": 545332,
+    "inference_time_per_sample": 0.0017763996124267579,
+    "flops": "see profiler logs"
+  },
+  "3Class": {
+    "parameters": 40771,
+    "size_bytes": 213454,
+    "inference_time_per_sample": 0.0018093585968017578,
+    "flops": "see profiler logs"
+  }
+}

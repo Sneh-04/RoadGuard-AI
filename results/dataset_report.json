@@ -1,0 +1,80 @@
+{
+  "dataset_overview": {
+    "total_samples": 874,
+    "training_samples": 611,
+    "validation_samples": 131,
+    "test_samples": 132,
+    "window_size": 100,
+    "features": 3,
+    "feature_names": [
+      "X-axis (accel)",
+      "Y-axis (accel)",
+      "Z-axis (accel)"
+    ]
+  },
+  "class_distribution": {
+    "train": {
+      "normal": 113,
+      "speedbreaker": 474,
+      "pothole": 24
+    },
+    "val": {
+      "normal": 24,
+      "speedbreaker": 102,
+      "pothole": 5
+    },
+    "test": {
+      "normal": 24,
+      "speedbreaker": 102,
+      "pothole": 6
+    },
+    "overall": {
+      "normal": 161,
+      "speedbreaker": 678,
+      "pothole": 35
+    }
+  },
+  "class_percentages": {
+    "overall": {
+      "normal": 18.42105263157895,
+      "speedbreaker": 77.57437070938215,
+      "pothole": 4.004576659038902
+    }
+  },
+  "imbalance_metrics": {
+    "imbalance_ratio": 19.37142857142857,
+    "minority_class_percentage": 4.004576659038902
+  },
+  "sensor_statistics": [
+    {
+      "Axis": "X-axis (accel)",
+      "Mean": 1.1147428750991821,
+      "Std Dev": 5.061078071594238,
+      "Min": -20.006000518798828,
+      "Max": 41.54100036621094,
+      "Q1": -1.1770000457763672,
+      "Median": 0.5099999904632568,
+      "Q3": 4.700499892234802
+    },
+    {
+      "Axis": "Y-axis (accel)",
+      "Mean": 0.9510502219200134,
+      "Std Dev": 3.584243059158325,
+      "Min": -20.006000518798828,
+      "Max": 40.207000732421875,
+      "Q1": -0.47099998593330383,
+      "Median": 0.4309999942779541,
+      "Q3": 2.7850000858306885
+    },
+    {
+      "Axis": "Z-axis (accel)",
+      "Mean": 5.814728260040283,
+      "Std Dev": 5.719837665557861,
+      "Min": -38.12799835205078,
+      "Max": 44.05500030517578,
+      "Q1": 5.059999942779541,
+      "Median": 7.688000202178955,
+      "Q3": 9.571000099182129
+    }
+  ]
+}
