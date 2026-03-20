@@ -22,10 +22,8 @@ MODEL_DIR = Path(os.environ.get("MODEL_DIR", str(PROJECT_ROOT / "models")))
 # ============================================================================
 
 # Stage 1: Normal vs Hazard detection (binary classification)
-STAGE1_MODEL_PATH = str(MODEL_DIR / "stage1_binary_v2.keras")
-
-# Stage 2: Speedbreaker vs Pothole classification (binary, if hazard detected)
-STAGE2_MODEL_PATH = str(MODEL_DIR / "stage2_subtype_v2.keras")
+STAGE1_MODEL_PATH = str(MODEL_DIR / "stage1_normal_vs_hazard.keras")
+STAGE2_MODEL_PATH = str(MODEL_DIR / "stage2_speedbreaker_vs_pothole.keras")
 
 # Vision: YOLOv8 model for hazard detection
 VISION_MODEL_PATH = str(MODEL_DIR / "best.pt")
