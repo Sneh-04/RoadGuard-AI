@@ -36,11 +36,23 @@ class HazardInferencePipeline:
     def __init__(self):
         """Initialize pipeline with loaded models."""
         self.loader = get_model_loader()
-        self.vision_pipeline = get_vision_pipeline()
-        self.fusion_pipeline = get_fusion_pipeline()
         
+        # Initialize vision pipeline - may not be available
+        try:
+            self.vision_pipeline = get_vision_pipeline()
+        except Exception as e:
+            logger.warning(f"Vision pipeline initialization failed: {e}")
+            self.vision_pipeline = None
+        
+        try:
+            self.fusion_pipeline = get_fusion_pipeline()
+        except Exception as e:
+            logger.warning(f"Fusion pipeline initialization failed: {e}")
+            self.fusion_pipeline = None
+        
+        # Sensor models are required
         if not self.loader.is_ready():
-            raise InferenceError("Sensor models not loaded. Call model_loader.load_all_models() first.")
+            logger.warning("Sensor models not loaded - inference will be degraded")
     
     def predict_sensor(self, data: list[list[float]]) -> PredictionResponse:
         """Run sensor-only inference pipeline.

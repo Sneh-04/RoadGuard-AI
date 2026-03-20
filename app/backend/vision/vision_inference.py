@@ -2,7 +2,15 @@
 import logging
 import numpy as np
 from typing import Optional, Tuple
-from ultralytics import YOLO
+
+# Safe YOLO import - don't crash server if unavailable
+try:
+    from ultralytics import YOLO
+    YOLO_AVAILABLE = True
+except ImportError:
+    YOLO = None
+    YOLO_AVAILABLE = False
+
 import cv2
 
 from ..utils.config import VISION_MODEL_PATH
@@ -33,6 +41,12 @@ class VisionInferencePipeline:
     def __init__(self):
         """Initialize vision pipeline."""
         self.model = None
+        self.available = YOLO_AVAILABLE
+        
+        if not YOLO_AVAILABLE:
+            logger.warning("⚠️  YOLO is not available - vision inference disabled")
+            return
+        
         self._load_model()
     
     def _load_model(self):
@@ -43,7 +57,8 @@ class VisionInferencePipeline:
             logger.info("✅ Vision model loaded successfully")
         except Exception as e:
             logger.error(f"❌ Failed to load vision model: {e}")
-            raise VisionInferenceError(f"Vision model loading failed: {e}")
+            self.model = None
+            self.available = False
     
     def predict_image(self, image_data: bytes) -> Tuple[str, float]:
         """Run inference on image data.
@@ -57,6 +72,10 @@ class VisionInferencePipeline:
         Raises:
             VisionInferenceError: If inference fails
         """
+        if not self.available or self.model is None:
+            logger.warning("Vision model not available - returning default")
+            return "normal", 0.0
+        
         try:
             # Decode image
             nparr = np.frombuffer(image_data, np.uint8)
@@ -87,11 +106,11 @@ class VisionInferencePipeline:
             
         except Exception as e:
             logger.error(f"Vision inference failed: {e}")
-            raise VisionInferenceError(f"Inference failed: {e}")
+            return "normal", 0.0
     
     def is_ready(self) -> bool:
         """Check if vision model is loaded and ready."""
-        return self.model is not None
+        return self.available and self.model is not None
 
 
 # Global vision pipeline instance

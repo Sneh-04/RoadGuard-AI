@@ -6,12 +6,16 @@ from pathlib import Path
 # PROJECT PATHS - Using pathlib for cross-platform compatibility
 # ============================================================================
 
-# Get the project root by going up 2 levels from this file:
-# app/backend/config.py -> app/backend -> app -> project root
-PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+# Get the project root by going up 3 levels from this file:
+# This file: app/backend/utils/config.py
+# parent: app/backend/utils
+# parent.parent: app/backend
+# parent.parent.parent: app
+# parent.parent.parent.parent: PROJECT_ROOT
+PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent.parent
 
-# Model directory - use environment variable or default
-MODEL_DIR = Path("/Users/pawankumar/Desktop/RoadHazardProject/models")
+# Model directory - use environment variable or default to relative path
+MODEL_DIR = Path(os.environ.get("MODEL_DIR", str(PROJECT_ROOT / "models")))
 
 # ============================================================================
 # MODEL PATHS - Production models

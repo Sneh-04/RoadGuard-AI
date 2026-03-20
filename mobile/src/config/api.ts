@@ -1,5 +1,7 @@
 // API Configuration
-export const API_BASE_URL = 'http://localhost:8000/api';
+// Use environment variable for backend URL, with deployed backend as production default
+const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL || 'https://roadguard-ai-2.onrender.com';
+export const API_BASE_URL = `${BACKEND_URL}/api`;
 
 // API Endpoints
 export const API_ENDPOINTS = {

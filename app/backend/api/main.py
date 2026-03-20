@@ -162,25 +162,20 @@ async def lifespan(app: FastAPI):
         # Store loader in app state for later access
         app.state.model_loader = model_loader
 
-        # Only initialize inference pipeline if models are ready
+        # Only initialize inference pipeline (non-critical)
         global inference_pipeline
-        if model_loader.is_ready():
-            try:
-                # deferred imports to avoid import cycles
-                from ..inference.inference import get_inference_pipeline
+        try:
+            # deferred imports to avoid import cycles
+            from ..inference.inference import get_inference_pipeline
 
-                inference_pipeline = HazardInferencePipeline()
-                # register in app state
-                app.state.inference_pipeline = inference_pipeline
-                logger.info("✅ Inference pipeline initialized successfully")
-            except InferenceError as e:
-                logger.error(
-                    f"❌ Inference pipeline initialization failed: {e}"
-                )
-                inference_pipeline = None
-                app.state.inference_pipeline = None
-        else:
-            logger.warning("❌ Skipping inference pipeline init because models failed to load")
+            inference_pipeline = HazardInferencePipeline()
+            # register in app state
+            app.state.inference_pipeline = inference_pipeline
+            logger.info("✅ Inference pipeline initialized successfully")
+        except Exception as e:
+            logger.warning(
+                f"⚠️  Inference pipeline initialization degraded: {e}"
+            )
             inference_pipeline = None
             app.state.inference_pipeline = None
 

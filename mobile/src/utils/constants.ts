@@ -1,5 +1,5 @@
 export const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL || 
-  "http://localhost:8000";
+  "https://roadguard-ai-2.onrender.com";
 
 export const HAZARD_COLORS: Record<number, string> = {
   0: '#3B82F6',
