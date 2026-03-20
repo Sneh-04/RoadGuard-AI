@@ -9,5 +9,7 @@ __pycache__/
 mobile/.expo/
 *.log
 data/
-models/*.keras
-models/*.pt
+models/*
+!models/stage1_binary_v2.keras
+!models/stage2_subtype_v2.keras
+!models/best.pt
