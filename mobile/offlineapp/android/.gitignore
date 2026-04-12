@@ -1,0 +1,58 @@
+# React Native build directories
+android/app/build/
+android/.gradle/
+*.apk
+*.aab
+*.jks
+*.keystore
+
+# Gradle
+.gradle/
+build/
+*.gradle.lock
+
+# node_modules
+node_modules/
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# React Native
+*.jsbundle
+*.bundle
+
+# Metro
+.metro-health-check*
+
+# Cache
+*.log
+.cache/
+
+# Development
+.env.local
+.env.*.local
+
+# Android Emulator
+*.avd
+*.ini
+
+# Release artifacts
+*.pem
+*.p8
+*.p12

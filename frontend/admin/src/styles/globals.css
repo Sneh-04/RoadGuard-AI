@@ -1,0 +1,102 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text-primary);
+}
+
+button, input, textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+input, textarea {
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  background: var(--surface);
+  color: var(--text-primary);
+  padding: 0.85rem 1rem;
+  width: 100%;
+}
+
+textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+tbody tr:hover {
+  background: rgba(146, 165, 184, 0.08);
+}
+
+th, td {
+  text-align: left;
+  padding: 0.85rem 1rem;
+}
+
+th {
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+img {
+  max-width: 100%;
+}
+
+.primary-button, .secondary-button, .logout-button, .icon-button {
+  border: none;
+  border-radius: 999px;
+  outline: none;
+}
+
+.primary-button {
+  background: var(--accent);
+  color: white;
+  padding: 0.95rem 1.2rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.primary-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 24px rgba(59, 130, 246, 0.18);
+}
+
+.secondary-button {
+  background: var(--surface-strong);
+  color: var(--text-primary);
+  padding: 0.95rem 1.2rem;
+}
+
+.icon-button {
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface-strong);
+  color: var(--text-primary);
+}
