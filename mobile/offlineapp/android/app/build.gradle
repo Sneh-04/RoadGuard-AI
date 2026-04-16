@@ -78,8 +78,6 @@ dependencies {
 
     // HTTP Client
     implementation "com.squareup.okhttp3:okhttp:4.10.0"
-
-    debugImplementation "com.facebook.react:react-native-community_logs:2.8.1"
 }
 
 apply plugin: "com.android.application"
