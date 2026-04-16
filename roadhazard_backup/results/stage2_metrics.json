@@ -1,0 +1,46 @@
+{
+  "test_loss": 0.6410279870033264,
+  "test_accuracy": 0.6666666865348816,
+  "accuracy": 0.6666666666666666,
+  "precision": 0.058823529411764705,
+  "recall": 0.3333333333333333,
+  "f1_score": 0.1,
+  "roc_auc": 0.4183006535947712,
+  "confusion_matrix": [
+    [
+      70,
+      32
+    ],
+    [
+      4,
+      2
+    ]
+  ],
+  "class_distribution": {
+    "train": {
+      "class_0_speedbreaker": 474,
+      "class_1_pothole": 24
+    },
+    "val": {
+      "class_0_speedbreaker": 102,
+      "class_1_pothole": 5
+    },
+    "test": {
+      "class_0_speedbreaker": 102,
+      "class_1_pothole": 6
+    }
+  },
+  "class_weights": {
+    "0": 0.5253164556962026,
+    "1": 10.375
+  },
+  "imbalance_ratio": 19.75,
+  "hyperparameters": {
+    "epochs": 50,
+    "batch_size": 32,
+    "optimizer": "adam",
+    "learning_rate": 0.001,
+    "loss": "binary_crossentropy",
+    "dropout": 0.4
+  }
+}
