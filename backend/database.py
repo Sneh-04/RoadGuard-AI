@@ -63,9 +63,9 @@ async def create_user(email: str, hashed_password: str) -> User:
 
 # Complaint operations
 async def create_complaint(complaint: Complaint) -> Complaint:
-    # Calculate priority based on nearby complaints
-    priority = await calculate_priority(complaint.latitude, complaint.longitude)
-    complaint.priority = priority
+    # Calculate severity based on nearby complaints
+    severity = await calculate_severity(complaint.latitude, complaint.longitude)
+    complaint.severity = severity
     if USE_MEMORY:
         _memory_complaints.append(complaint.dict(by_alias=True))
         return complaint
@@ -73,15 +73,15 @@ async def create_complaint(complaint: Complaint) -> Complaint:
     return complaint
 
 async def get_complaints(skip: int = 0, limit: int = 100, status: Optional[str] = None,
-                        priority: Optional[str] = None, days: Optional[int] = None) -> List[Complaint]:
+                        severity: Optional[str] = None, days: Optional[int] = None) -> List[Complaint]:
     if USE_MEMORY:
         complaints = _memory_complaints.copy()
     else:
         query = {}
         if status:
             query["status"] = status
-        if priority:
-            query["priority"] = priority
+        if severity:
+            query["severity"] = severity
         if days:
             cutoff = datetime.utcnow() - timedelta(days=days)
             query["timestamp"] = {"$gte": cutoff}
@@ -136,7 +136,7 @@ async def update_complaint_priority(complaint_id: str, priority: str) -> bool:
     )
     return result.modified_count > 0
 
-async def calculate_priority(lat: float, lng: float) -> str:
+async def calculate_severity(lat: float, lng: float) -> str:
     if USE_MEMORY:
         complaints = _memory_complaints
     else:
@@ -167,9 +167,10 @@ async def get_analytics():
             complaints.append(doc)
 
     total = len(complaints)
-    resolved = sum(1 for c in complaints if c.get("status") == "Resolved")
-    pending = sum(1 for c in complaints if c.get("status") == "Pending")
-    in_progress = sum(1 for c in complaints if c.get("status") == "In Progress")
+    solved = sum(1 for c in complaints if c.get("status") == "solved")
+    pending = sum(1 for c in complaints if c.get("status") == "pending")
+    in_progress = sum(1 for c in complaints if c.get("status") == "in_progress")
+    ignored = sum(1 for c in complaints if c.get("status") == "ignored")
 
     # Daily reports (last 7 days)
     daily = []
@@ -201,9 +202,10 @@ async def get_analytics():
 
     return {
         "total_reports": total,
-        "resolved": resolved,
+        "solved": solved,
         "pending": pending,
         "in_progress": in_progress,
+        "ignored": ignored,
         "daily_reports": daily,
         "weekly_reports": weekly,
         "most_affected_areas": most_affected

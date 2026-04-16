@@ -41,8 +41,10 @@ class Complaint(BaseModel):
     longitude: float
     address: Optional[str] = None
     description: str
-    status: str = "Pending"  # Pending, In Progress, Resolved, Rejected
-    priority: str = "Low"  # Low, Medium, High
+    type: Optional[str] = None  # pothole, speedbump, etc.
+    severity: str = "Low"  # Low, Medium, High
+    sensor_data: Optional[dict] = None  # sensor readings
+    status: str = "pending"  # pending, in_progress, solved, ignored
     timestamp: datetime = Field(default_factory=datetime.utcnow)
     resolved_at: Optional[datetime] = None
 
@@ -83,16 +85,20 @@ class ComplaintCreate(BaseModel):
     longitude: float
     address: Optional[str]
     description: str
+    type: Optional[str]
+    severity: Optional[str]
+    sensor_data: Optional[dict]
 
 class ComplaintUpdate(BaseModel):
     status: Optional[str]
-    priority: Optional[str]
+    severity: Optional[str]
 
 class AnalyticsResponse(BaseModel):
     total_reports: int
-    resolved: int
+    solved: int
     pending: int
     in_progress: int
+    ignored: int
     daily_reports: List[dict]
     weekly_reports: List[dict]
     most_affected_areas: List[dict]

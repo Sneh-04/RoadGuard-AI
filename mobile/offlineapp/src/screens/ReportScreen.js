@@ -112,11 +112,54 @@ const ReportScreen = () => {
         throw new Error('Offline mode');
       }
 
-      await fetch('YOUR_API', {
+      // First, detect hazard type from image if available
+      let detectionResult = { type: 'unknown', confidence: 0.0 };
+      if (capturedImage?.base64) {
+        try {
+          const formData = new FormData();
+          formData.append('file', {
+            uri: capturedImage.uri,
+            type: 'image/jpeg',
+            name: 'image.jpg',
+          });
+
+          const detectResponse = await fetch('http://localhost:8002/api/admin/detect', {
+            method: 'POST',
+            body: formData,
+          });
+
+          if (detectResponse.ok) {
+            detectionResult = await detectResponse.json();
+          }
+        } catch (detectError) {
+          console.log('Detection failed, using fallback:', detectError.message);
+        }
+      }
+
+      // Send complaint with detected type
+      const complaintData = {
+        user_id: report.user_id,
+        image: capturedImage?.base64,
+        latitude: report.location.latitude,
+        longitude: report.location.longitude,
+        address: report.location.address,
+        description: report.description,
+        type: detectionResult.type,
+        severity: detectionResult.type === 'pothole' ? 'High' : detectionResult.type === 'speedbreaker' ? 'Medium' : 'Low',
+        sensor_data: report.sensor_data,
+      };
+
+      const response = await fetch('http://localhost:8002/api/admin/complaints', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(report),
+        body: JSON.stringify(complaintData),
       });
+
+      if (!response.ok) {
+        throw new Error('Failed to send complaint');
+      }
+
+      return await response.json();
     } catch (error) {
       console.log('Using mock API:', error.message);
     }
@@ -146,6 +189,10 @@ const ReportScreen = () => {
               address: `${currentLocation.latitude.toFixed(4)}, ${currentLocation.longitude.toFixed(4)}`,
             }
           : { latitude: 0, longitude: 0, address: 'auto/fake coords' },
+        user_id: 'mobile-user-1', // TODO: get from auth
+        description: description || `${result.label} detected`,
+        severity: result.label === 'pothole' ? 'High' : 'Medium', // Simple mapping
+        sensor_data: sensorData,
       };
 
       await saveToLocal(report);

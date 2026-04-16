@@ -121,9 +121,9 @@ export function AdminProvider({ children }) {
     }
   };
 
-  const markResolved = (id) => updateReportStatus(id, 'Resolved');
-  const markInProgress = (id) => updateReportStatus(id, 'In Progress');
-  const rejectReport = (id) => updateReportStatus(id, 'Rejected');
+  const markResolved = (id) => updateReportStatus(id, 'solved');
+  const markInProgress = (id) => updateReportStatus(id, 'in_progress');
+  const rejectReport = (id) => updateReportStatus(id, 'ignored');
 
   const ignoreReport = (id, reason) => {
     updateReportStatus(id, 'Ignored');

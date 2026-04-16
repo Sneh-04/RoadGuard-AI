@@ -3,10 +3,10 @@ import { useAdminContext } from '../context/AdminContext.jsx';
 import { AlertTriangle, CheckCircle, Clock, MapPin } from 'lucide-react';
 
 const statusColors = {
-  Pending: '#F59E0B',
-  Resolved: '#22C55E',
-  'In Progress': '#3B82F6',
-  Rejected: '#EF4444',
+  pending: '#F59E0B',
+  solved: '#22C55E',
+  in_progress: '#3B82F6',
+  ignored: '#EF4444',
 };
 
 export default function Overview() {
@@ -25,8 +25,8 @@ export default function Overview() {
       bg: 'bg-orange-100',
     },
     {
-      title: 'Resolved',
-      value: analytics.resolved || 0,
+      title: 'Solved',
+      value: analytics.solved || 0,
       icon: CheckCircle,
       color: 'text-green-600',
       bg: 'bg-green-100',
@@ -48,9 +48,10 @@ export default function Overview() {
   ];
 
   const statusData = [
-    { name: 'Pending', value: analytics.pending || 0, color: statusColors.Pending },
-    { name: 'Resolved', value: analytics.resolved || 0, color: statusColors.Resolved },
-    { name: 'In Progress', value: analytics.in_progress || 0, color: statusColors['In Progress'] },
+    { name: 'Pending', value: analytics.pending || 0, color: statusColors.pending },
+    { name: 'Solved', value: analytics.solved || 0, color: statusColors.solved },
+    { name: 'In Progress', value: analytics.in_progress || 0, color: statusColors.in_progress },
+    { name: 'Ignored', value: analytics.ignored || 0, color: statusColors.ignored },
   ];
 
   return (
@@ -77,6 +78,40 @@ export default function Overview() {
             </div>
           );
         })}
+      </div>
+
+      {/* Real-time Alerts */}
+      <div className="bg-white p-6 rounded-lg shadow-sm border">
+        <h3 className="text-lg font-semibold mb-4 text-red-600">🚨 Critical Alerts</h3>
+        <div className="space-y-3">
+          {reports.filter(r => r.severity === 'High' && r.status === 'pending').slice(0, 5).map((report) => (
+            <div key={report._id} className="flex items-center justify-between p-3 bg-red-50 border border-red-200 rounded">
+              <div className="flex items-center space-x-3">
+                {report.image && (
+                  <img
+                    src={`data:image/jpeg;base64,${report.image}`}
+                    alt="Hazard"
+                    className="w-12 h-12 object-cover rounded"
+                  />
+                )}
+                <div>
+                  <p className="font-medium text-red-800">{report.type || 'Unknown'} Hazard</p>
+                  <p className="text-sm text-red-600">{report.address || `${report.latitude?.toFixed(4)}, ${report.longitude?.toFixed(4)}`}</p>
+                  <p className="text-xs text-red-500">{new Date(report.timestamp).toLocaleString()}</p>
+                </div>
+              </div>
+              <button
+                onClick={() => {/* markInProgress */}}
+                className="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700"
+              >
+                Respond
+              </button>
+            </div>
+          ))}
+          {reports.filter(r => r.severity === 'High' && r.status === 'pending').length === 0 && (
+            <p className="text-gray-500 text-center py-4">No critical alerts at this time</p>
+          )}
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

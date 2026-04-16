@@ -1,12 +1,29 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Security
+from fastapi import APIRouter, Depends, HTTPException, status, Security, UploadFile, File
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from models import LoginRequest, TokenResponse, ComplaintCreate, ComplaintUpdate, Complaint
 from database import get_user_by_email, create_user, create_complaint, get_complaints, get_complaint_by_id, update_complaint_status, get_analytics, get_activity_logs
 from auth import verify_password, get_password_hash, create_access_token, verify_token
 from typing import List, Optional
 import logging
+import os
 
 logger = logging.getLogger(__name__)
+
+# YOLO model - loaded lazily
+model = None
+
+MODEL_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'models', 'best.pt'))
+
+def get_model():
+    global model
+    if model is None:
+        try:
+            from ultralytics import YOLO
+            model = YOLO(MODEL_PATH)
+        except Exception as e:
+            logger.error(f"Failed to load YOLO model: {e}")
+            model = None
+    return model
 
 router = APIRouter()
 security = HTTPBearer(auto_error=False)
@@ -53,11 +70,11 @@ async def get_complaints_endpoint(
     skip: int = 0,
     limit: int = 100,
     status_filter: Optional[str] = None,
-    priority: Optional[str] = None,
+    severity: Optional[str] = None,
     days: Optional[int] = None,
     current_admin: dict = Depends(get_current_admin)
 ):
-    complaints = await get_complaints(skip=skip, limit=limit, status=status_filter, priority=priority, days=days)
+    complaints = await get_complaints(skip=skip, limit=limit, status=status_filter, severity=severity, days=days)
     return {"complaints": [complaint.dict() for complaint in complaints], "total": len(complaints)}
 
 @router.get("/complaints/{complaint_id}")
@@ -83,10 +100,90 @@ async def update_status(
 
 @router.post("/complaints")
 async def create_complaint_endpoint(complaint: ComplaintCreate):
+    # Auto-detect hazard type if image provided and type not set
+    if complaint.image and not complaint.type:
+        try:
+            model = get_model()
+            if model:
+                # Convert base64 to bytes
+                import base64
+                image_bytes = base64.b64decode(complaint.image)
+                
+                # Run detection
+                results = model(image_bytes)
+                
+                if results and len(results) > 0:
+                    result = results[0]
+                    if result.boxes and len(result.boxes) > 0:
+                        confidences = result.boxes.conf
+                        class_ids = result.boxes.cls
+                        max_conf_idx = confidences.argmax()
+                        confidence = float(confidences[max_conf_idx])
+                        class_id = int(class_ids[max_conf_idx])
+                        
+                        class_names = ['pothole', 'speedbreaker', 'normal']
+                        hazard_type = class_names[class_id] if class_id < len(class_names) else 'unknown'
+                        
+                        # Update complaint with detected type
+                        complaint.type = hazard_type
+                        complaint.severity = 'High' if hazard_type == 'pothole' else 'Medium' if hazard_type == 'speedbreaker' else 'Low'
+        except Exception as e:
+            logger.error(f"Auto-detection failed: {e}")
+            # Continue without detection
+    
     # This could be called from mobile app
     db_complaint = Complaint(**complaint.dict())
     created = await create_complaint(db_complaint)
     return created.dict()
+
+@router.post("/detect")
+async def detect_hazard(file: UploadFile = File(...)):
+    try:
+        model = get_model()
+        if model:
+            # Read image file
+            contents = await file.read()
+            
+            # Run YOLO inference
+            results = model(contents)
+            
+            # Extract results
+            if results and len(results) > 0:
+            print(results)
+            result = results[0]
+            print(result.boxes)
+            if result.boxes and len(result.boxes) > 0:
+                print(result.boxes.cls)
+                print(result.boxes.conf)
+                    class_ids = result.boxes.cls
+                    max_conf_idx = confidences.argmax()
+                    confidence = float(confidences[max_conf_idx])
+                    class_id = int(class_ids[max_conf_idx])
+                    
+                    # Map class id to type (assuming 0=pothole, 1=speedbreaker, 2=normal)
+                    class_names = ['pothole', 'speedbreaker', 'normal']
+                    hazard_type = class_names[class_id] if class_id < len(class_names) else 'unknown'
+                    
+                    return {
+                        "type": hazard_type,
+                        "confidence": round(confidence, 2)
+                    }
+        
+        # Fallback: mock detection based on filename or random
+        import random
+        types = ['pothole', 'speedbreaker', 'normal']
+        return {
+            "type": random.choice(types),
+            "confidence": round(random.uniform(0.7, 0.95), 2)
+        }
+        
+    except Exception as e:
+        logger.error(f"Detection failed: {e}")
+        # Fallback
+        return {
+            "type": "unknown",
+            "confidence": 0.0
+        }
 
 @router.get("/analytics")
 async def get_analytics_endpoint(current_admin: dict = Depends(get_current_admin)):

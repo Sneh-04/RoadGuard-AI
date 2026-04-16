@@ -11,18 +11,17 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
 });
 
-const getStatusColor = (status) => {
-  switch (status) {
-    case 'Resolved': return 'green';
-    case 'Pending': return 'orange';
-    case 'In Progress': return 'blue';
-    case 'Rejected': return 'red';
+const getStatusColor = (severity) => {
+  switch (severity) {
+    case 'High': return 'red';
+    case 'Medium': return 'orange';
+    case 'Low': return 'green';
     default: return 'gray';
   }
 };
 
-const createCustomIcon = (status) => {
-  const color = getStatusColor(status);
+const createCustomIcon = (severity) => {
+  const color = getStatusColor(severity);
   return L.divIcon({
     html: `<div style="background-color: ${color}; width: 20px; height: 20px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 4px rgba(0,0,0,0.3);"></div>`,
     className: 'custom-marker',
@@ -64,7 +63,7 @@ export default function HazardMap() {
               <Marker
                 key={report._id}
                 position={[report.latitude, report.longitude]}
-                icon={createCustomIcon(report.status)}
+                icon={createCustomIcon(report.severity)}
                 eventHandlers={{
                   click: () => setSelectedReport(report),
                 }}
@@ -91,19 +90,19 @@ export default function HazardMap() {
                         </div>
                         <div className="mt-2">
                           <span className={`px-2 py-1 text-xs font-medium rounded-full ${
-                            report.status === 'Resolved' ? 'bg-green-100 text-green-800' :
-                            report.status === 'Pending' ? 'bg-yellow-100 text-yellow-800' :
-                            report.status === 'In Progress' ? 'bg-blue-100 text-blue-800' :
+                            report.status === 'solved' ? 'bg-green-100 text-green-800' :
+                            report.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                            report.status === 'in_progress' ? 'bg-blue-100 text-blue-800' :
                             'bg-red-100 text-red-800'
                           }`}>
                             {report.status}
                           </span>
                           <span className={`ml-2 px-2 py-1 text-xs font-medium rounded-full ${
-                            report.priority === 'High' ? 'bg-red-100 text-red-800' :
-                            report.priority === 'Medium' ? 'bg-yellow-100 text-yellow-800' :
+                            report.severity === 'High' ? 'bg-red-100 text-red-800' :
+                            report.severity === 'Medium' ? 'bg-yellow-100 text-yellow-800' :
                             'bg-green-100 text-green-800'
                           }`}>
-                            {report.priority} Priority
+                            {report.severity} Severity
                           </span>
                         </div>
                       </div>
