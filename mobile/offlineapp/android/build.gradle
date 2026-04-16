@@ -1,68 +1,25 @@
-/**
- * This is the configuration block to customize your React Native Android app.
- * By default, the template uses version 0.0.1 of react-native and a hermes JS engine.
- * The react.gradle file allows you to apply custom gradle tasks and configurations.
- */
-
-apply plugin: "com.android.application"
-apply plugin: "com.facebook.react"
-
-/**
- * Gradle configuration block to use in building React Native Android app.
- */
-
-android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
-
-    namespace "com.roadguard.mobile"
-
-    defaultConfig {
-        applicationId "com.roadguard.mobile"
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0.0"
+buildscript {
+    ext {
+        buildToolsVersion = "33.0.0"
+        minSdkVersion = 21
+        compileSdkVersion = 34
+        targetSdkVersion = 34
+        kotlinVersion = "1.8.0"
     }
-
-    signingConfigs {
-        debug {
-            storeFile file('debug.keystore')
-            storePassword 'android'
-            keyAlias 'androiddebugkey'
-            keyPassword 'android'
-        }
+    repositories {
+        google()
+        mavenCentral()
     }
-
-    buildTypes {
-        debug {
-            debuggable true
-            signingConfig signingConfigs.debug
-        }
-        release {
-            minifyEnabled enableProguardInReleaseBuilds
-            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
-            signingConfig signingConfigs.release
-        }
+    dependencies {
+        classpath("com.android.tools.build:gradle:7.4.2")
+        classpath("com.facebook.react:react-native-gradle-plugin")
     }
-}
-
-ext {
-    compileSdkVersion = 34
-    targetSdkVersion = 34
-    buildToolsVersion = "34.0.0"
-    minSdkVersion = 21
-    ndkVersion = "25.2.9519653"
-}
-
-dependencies {
-    implementation "androidx.annotation:annotation:1.6.0"
-    implementation "androidx.appcompat:appcompat:1.6.1"
 }
 
 allprojects {
     repositories {
-        google()
         mavenCentral()
+        google()
+        maven { url("$rootDir/../node_modules/react-native/android") }
     }
 }

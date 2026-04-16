@@ -3,7 +3,7 @@ import axios from 'axios';
 import database from './database';
 import RNFS from 'react-native-fs';
 
-const API_BASE_URL = 'https://roadguard-ai-2.onrender.com/api';
+const API_BASE_URL = 'http://10.162.102.66:8002';
 
 const vibrateOnSyncSuccess = () => {
   try {

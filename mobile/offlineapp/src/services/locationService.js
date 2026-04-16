@@ -1,4 +1,4 @@
-import Geolocation from '@react-native-geolocation/geolocation';
+import Geolocation from '@react-native-community/geolocation';
 import { PermissionsAndroid, Platform } from 'react-native';
 
 class LocationService {

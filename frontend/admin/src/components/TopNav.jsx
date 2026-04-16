@@ -13,9 +13,6 @@ const titles = {
 export default function TopNav() {
   const { activePage, apiBase } = useAdminContext();
 
-export default function TopNav() {
-  const { activePage, apiBase } = useAdminContext();
-
   return (
     <header className="bg-white shadow-sm border-b px-6 py-4">
       <div className="flex justify-between items-center">
@@ -34,5 +31,4 @@ export default function TopNav() {
       </div>
     </header>
   );
-}
 }

@@ -36,42 +36,10 @@ STAGE2_MODEL = "../models/stage2_subtype_v2.keras"
 stage1_model = None
 stage2_model = None
 yolo_model = None
+manager = None  # Will be set to _FallbackManager() if not imported
 PRODUCTION = False
 
-YOLO_MODEL_PATH = "../models/best.pt"
-STAGE1_MODEL = "../models/stage1_binary_v2.keras"
-STAGE2_MODEL = "../models/stage2_subtype_v2.keras"
-
-stage1_model = None
-stage2_model = None
-yolo_model = None
-PRODUCTION = False
-
-# ── Local imports (adjust to your actual package layout) ──────────────────────
-try:
-    from app.backend.inference.inference import run_inference
-    from app.backend.database.db import (
-        save_event, get_events, get_stats, init_db
-    )
-    from app.backend.utils.deduplication import is_duplicate
-    from app.backend.api.websocket_manager import manager
-    PRODUCTION = True
-except ImportError:
-    # Fallback for local dev / testing without full package installed
-    PRODUCTION = False
-    manager = None  # replaced below
-
-if PRODUCTION:
-    try:
-        from tensorflow.keras.models import load_model
-        from ultralytics import YOLO
-        stage1_model = load_model(STAGE1_MODEL_PATH)
-        stage2_model = load_model(STAGE2_MODEL_PATH)
-        yolo_model = YOLO(YOLO_MODEL_PATH)
-        logger.info("Loaded sensor and vision models")
-    except Exception as e:
-        logger.warning(f"Model load failed: {e}")
-
+# ── Logging setup first ─────────────────────────────────────────────────────
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("roadguard")
 
@@ -89,9 +57,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-# Include admin routes
-app.include_router(admin_router, prefix="/api/admin", tags=["admin"])
 
 # Include admin routes
 app.include_router(admin_router, prefix="/api/admin", tags=["admin"])

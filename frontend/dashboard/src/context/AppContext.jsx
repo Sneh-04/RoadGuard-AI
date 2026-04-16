@@ -5,7 +5,7 @@ import { formatTime } from '../utils/helpers.js';
 const AppContext = createContext(null);
 
 const STORAGE_KEY = 'roadguard_v1';
-const DEFAULT_API = import.meta.env.VITE_API_URL || 'https://YOUR_NGROK_URL';
+const DEFAULT_API = 'http://localhost:8002';
 
 const initialState = {
   user: null,

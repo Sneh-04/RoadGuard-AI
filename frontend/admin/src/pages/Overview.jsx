@@ -150,28 +150,3 @@ export default function Overview() {
     </div>
   );
 }
-              </tbody>
-            </table>
-          </div>
-        </section>
-
-        <section className="card activity-card">
-          <div className="card-title">Recent activity</div>
-          <div className="activity-stream">
-            {activityLog.slice(0, 5).map((item) => (
-              <div key={item.id} className="activity-item">
-                <div>
-                  <p>{item.action} {item.reportType || item.userId ? item.reportType || item.userId : ''}</p>
-                  <small>{item.admin} · {timeAgo(item.timestamp)}</small>
-                </div>
-                <span className="status-chip" style={{ background: statusColors[item.action] || '#2563EB' }}>
-                  {item.action}
-                </span>
-              </div>
-            ))}
-          </div>
-        </section>
-      </div>
-    </div>
-  );
-}

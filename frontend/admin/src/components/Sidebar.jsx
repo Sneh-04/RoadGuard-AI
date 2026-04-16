@@ -13,9 +13,6 @@ const navItems = [
 export default function Sidebar() {
   const { admin, activePage, setActivePage, logout } = useAdminContext();
 
-export default function Sidebar() {
-  const { admin, activePage, setActivePage, logout } = useAdminContext();
-
   return (
     <aside className="w-64 bg-white shadow-lg">
       <div className="p-6 border-b">
@@ -64,9 +61,6 @@ export default function Sidebar() {
           <LogOut size={16} />
           <span>Sign out</span>
         </button>
-      </div>
-    </aside>
-  );
       </div>
     </aside>
   );

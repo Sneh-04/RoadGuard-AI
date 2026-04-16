@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { ActivityIndicator, View } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import codePush from 'react-native-code-push';
 
 import { AppProvider, useAppContext } from './src/context/AppContext';
 import ReportScreen from './src/screens/ReportScreen';
@@ -91,7 +92,7 @@ function NavigationTabs() {
   );
 }
 
-export default function App() {
+function AppRoot() {
   return (
     <AppProvider>
       <NavigationContainer>
@@ -100,3 +101,5 @@ export default function App() {
     </AppProvider>
   );
 }
+
+export default codePush(AppRoot);

@@ -126,15 +126,13 @@ export function AdminProvider({ children }) {
   const rejectReport = (id) => updateReportStatus(id, 'Rejected');
 
   const ignoreReport = (id, reason) => {
-    updateReportStatus(id, 'Ignored', reason);
-    addActivity({ action: 'Ignored', reportId: id, reportType: reports.find((r) => r.id === id)?.type || 'Hazard', admin: admin?.name || 'Admin', note: reason });
+    updateReportStatus(id, 'Ignored');
     showToast(`Report ${id} ignored.`, 'warning');
   };
 
   const escalateReport = (id) => {
     updateReportStatus(id, 'Escalated');
-    addActivity({ action: 'Escalated', reportId: id, reportType: reports.find((r) => r.id === id)?.type || 'Hazard', admin: admin?.name || 'Admin' });
-    showToast(`Report ${id} escalated.`, 'danger');
+    showToast(`Report ${id} escalated for higher review.`, 'info');
   };
 
   const addAdminNote = (reportId, note) => {
@@ -151,7 +149,6 @@ export function AdminProvider({ children }) {
       ...user,
       status: user.id === userId ? 'Suspended' : user.status,
     })));
-    addActivity({ action: 'Suspended', userId, admin: admin?.name || 'Admin', note: reason });
     showToast('User suspended.', 'warning');
   };
 
@@ -167,8 +164,9 @@ export function AdminProvider({ children }) {
     loading,
     login,
     logout,
+    setAdmin,
     setActivePage,
-    updateApiBase,
+
     markResolved,
     markInProgress,
     rejectReport,

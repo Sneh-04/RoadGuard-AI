@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useAdminContext } from '../context/AdminContext.jsx';
 
 export default function LoginPage() {
-  const { login, loading } = useAdminContext();
+  const { login, loading, setAdmin } = useAdminContext();
   const [email, setEmail] = useState('admin@roadguard.in');
   const [password, setPassword] = useState('roadguard@admin2024');
   const [error, setError] = useState('');
@@ -15,6 +15,13 @@ export default function LoginPage() {
     } catch (err) {
       setError(err.message || 'Invalid credentials');
     }
+  };
+
+  const handleDemoMode = () => {
+    // Demo mode - bypass authentication
+    const demoToken = 'demo_token_' + Date.now();
+    localStorage.setItem('admin_token', demoToken);
+    setAdmin({ email: 'demo@roadguard.in', token: demoToken });
   };
 
   return (
@@ -74,12 +81,24 @@ export default function LoginPage() {
           >
             {loading ? 'Signing in...' : 'Sign in'}
           </button>
+
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-300"></div>
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-2 bg-gray-50 text-gray-500">or</span>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={handleDemoMode}
+            className="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+          >
+            Demo Mode (Skip Login)
+          </button>
         </form>
-      </div>
-    </div>
-  );
-}
-        </div>
       </div>
     </div>
   );
