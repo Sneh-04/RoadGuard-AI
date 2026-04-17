@@ -37,7 +37,14 @@ const SettingsScreen = () => {
       const sync = await AsyncStorage.getItem('AUTO_SYNC_ENABLED');
       const interval = await AsyncStorage.getItem('SYNC_INTERVAL');
 
-      if (url) setApiUrl(url);
+      if (url) {
+        setApiUrl(url);
+        syncService.setApiBaseUrl(url);
+      } else {
+        const defaultUrl = 'http://10.0.2.2:8002/api';
+        setApiUrl(defaultUrl);
+        syncService.setApiBaseUrl(defaultUrl);
+      }
       if (sync !== null) setAutoSync(JSON.parse(sync));
       if (interval) setSyncInterval(interval);
     } catch (error) {
@@ -58,6 +65,7 @@ const SettingsScreen = () => {
         ['AUTO_SYNC_ENABLED', JSON.stringify(autoSync)],
         ['SYNC_INTERVAL', syncInterval],
       ]);
+      syncService.setApiBaseUrl(apiUrl);
 
       Alert.alert('Success', 'Settings saved successfully');
       setIsEditing(false);
@@ -79,7 +87,9 @@ const SettingsScreen = () => {
           text: 'Reset',
           style: 'destructive',
           onPress: () => {
-            setApiUrl('http://localhost:8002/api');
+            const defaultUrl = 'http://10.0.2.2:8002/api';
+            setApiUrl(defaultUrl);
+            syncService.setApiBaseUrl(defaultUrl);
             setAutoSync(true);
             setSyncInterval('30');
           },
@@ -148,7 +158,7 @@ const SettingsScreen = () => {
           <Text style={styles.settingLabel}>API Base URL</Text>
           <TextInput
             style={[styles.input, !isEditing && styles.inputDisabled]}
-            placeholder="http://localhost:8002/api"
+            placeholder="http://10.0.2.2:8002/api"
             value={apiUrl}
             onChangeText={setApiUrl}
             editable={isEditing}

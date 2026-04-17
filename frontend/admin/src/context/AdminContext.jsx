@@ -27,6 +27,9 @@ export function AdminProvider({ children }) {
   const [activityLog, setActivityLog] = useState(initialState.activityLog);
   const [toast, setToast] = useState(initialState.toast);
   const [loading, setLoading] = useState(initialState.loading);
+  const [socketStatus, setSocketStatus] = useState('connecting');
+  const [liveHazards, setLiveHazards] = useState([]);
+  const [liveStats, setLiveStats] = useState({ total: 0, normal: 0, speed_breaker: 0, pothole: 0 });
 
   useEffect(() => {
     const token = localStorage.getItem('admin_token');
@@ -49,6 +52,91 @@ export function AdminProvider({ children }) {
       fetchData();
     }
   }, [admin]);
+
+  useEffect(() => {
+    let socket;
+    let reconnectTimer;
+
+    const connectWebSocket = () => {
+      setSocketStatus('connecting');
+      socket = new WebSocket('ws://localhost:8002/ws/events');
+
+      socket.onopen = () => {
+        setSocketStatus('connected');
+      };
+
+      socket.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data);
+
+          if (data.type === 'snapshot') {
+            setLiveStats(data.stats || { total: 0, normal: 0, speed_breaker: 0, pothole: 0 });
+            setLiveHazards(
+              (data.events || []).map((item, index) => ({
+                id: item.id || `event_${index}`,
+                type: item.label || item.type || 'Unknown',
+                severity: item.severity || 'Medium',
+                location: item.address || (item.lat && item.lng ? `${item.lat.toFixed(3)}, ${item.lng.toFixed(3)}` : 'Unknown'),
+                reporter: item.reporter || 'Live feed',
+                distance: item.distance || '—',
+                lat: item.lat || 13.0827,
+                lng: item.lng || 80.2707,
+                timestamp: item.timestamp || new Date().toISOString(),
+              }))
+            );
+          }
+
+          if (data.type === 'event') {
+            const liveEvent = {
+              id: data.id || `event_${Date.now()}`,
+              type: data.label || data.type || 'Live Report',
+              severity: data.severity || 'Medium',
+              location: data.address || (data.lat && data.lng ? `${data.lat.toFixed(3)}, ${data.lng.toFixed(3)}` : 'Unknown'),
+              reporter: data.reporter || 'Live feed',
+              distance: data.distance || '—',
+              lat: data.lat || 13.0827,
+              lng: data.lng || 80.2707,
+              timestamp: data.timestamp || new Date().toISOString(),
+            };
+
+            setLiveHazards((current) => [liveEvent, ...current].slice(0, 50));
+            setLiveStats((current) => ({
+              ...current,
+              total: (current.total || 0) + 1,
+            }));
+            setActivityLog((current) => [
+              {
+                id: `activity_${Date.now()}`,
+                type: 'live_event',
+                message: `${liveEvent.type} reported at ${liveEvent.location}`,
+                timestamp: liveEvent.timestamp,
+              },
+              ...current,
+            ].slice(0, 20));
+          }
+        } catch (err) {
+          console.error('WebSocket parse error', err);
+        }
+      };
+
+      socket.onclose = () => {
+        setSocketStatus('reconnecting');
+        reconnectTimer = window.setTimeout(connectWebSocket, 3000);
+      };
+
+      socket.onerror = () => {
+        setSocketStatus('error');
+        socket.close();
+      };
+    };
+
+    connectWebSocket();
+
+    return () => {
+      if (reconnectTimer) window.clearTimeout(reconnectTimer);
+      if (socket && socket.readyState === WebSocket.OPEN) socket.close();
+    };
+  }, []);
 
   const api = axios.create({
     baseURL: apiBase,
@@ -162,6 +250,9 @@ export function AdminProvider({ children }) {
     activityLog,
     toast,
     loading,
+    socketStatus,
+    liveHazards,
+    liveStats,
     login,
     logout,
     setAdmin,
@@ -171,7 +262,7 @@ export function AdminProvider({ children }) {
     markInProgress,
     rejectReport,
     showToast,
-  }), [admin, activePage, apiBase, reports, users, analytics, activityLog, toast, loading]);
+  }), [admin, activePage, apiBase, reports, users, analytics, activityLog, toast, loading, socketStatus, liveHazards, liveStats]);
 
   return <AdminContext.Provider value={contextValue}>{children}</AdminContext.Provider>;
 }

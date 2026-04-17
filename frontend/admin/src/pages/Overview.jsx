@@ -10,7 +10,7 @@ const statusColors = {
 };
 
 export default function Overview() {
-  const { analytics, reports, loading } = useAdminContext();
+  const { analytics, reports, loading, socketStatus, liveStats } = useAdminContext();
 
   if (loading) {
     return <div className="flex justify-center items-center h-64">Loading...</div>;
@@ -59,6 +59,17 @@ export default function Overview() {
       <div>
         <h2 className="text-3xl font-bold text-gray-900">Dashboard Overview</h2>
         <p className="text-gray-600">Live incident intelligence and system status</p>
+      </div>
+
+      <div className="rounded-[1.75rem] border border-white/10 bg-[#0f2f2f]/80 p-5 text-slate-100 shadow-sm">
+        <div className="flex flex-wrap items-center gap-3">
+          <span className={`rounded-full px-3 py-1 text-xs ${socketStatus === 'connected' ? 'bg-emerald-500/15 text-emerald-200' : socketStatus === 'connecting' ? 'bg-amber-500/15 text-amber-200' : 'bg-red-500/15 text-red-200'}`}>
+            {socketStatus === 'connected' ? 'Live feed connected' : socketStatus === 'connecting' ? 'Connecting to live feed…' : 'Live feed offline'}
+          </span>
+          <span className="rounded-full bg-slate-900/60 px-3 py-1 text-xs text-slate-200">{liveStats.total || 0} hazards streamed</span>
+          <span className="rounded-full bg-slate-900/60 px-3 py-1 text-xs text-slate-200">{liveStats.pothole || 0} potholes</span>
+          <span className="rounded-full bg-slate-900/60 px-3 py-1 text-xs text-slate-200">{liveStats.speed_breaker || 0} speed breakers</span>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

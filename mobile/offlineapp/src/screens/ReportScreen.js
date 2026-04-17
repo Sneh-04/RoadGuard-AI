@@ -15,6 +15,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useAppContext } from '../context/AppContext';
 import cameraService from '../services/cameraService';
 import locationService from '../services/locationService';
+import syncService from '../services/syncService';
 import database from '../services/database';
 
 const ReportScreen = () => {
@@ -44,9 +45,9 @@ const ReportScreen = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const detectHazard = async (imageData) => {
+  const detectHazard = async (image) => {
     try {
-      if (!imageData) {
+      if (!image || !image.uri) {
         throw new Error('No image provided');
       }
 
@@ -54,10 +55,17 @@ const ReportScreen = () => {
         throw new Error('Offline detection fallback');
       }
 
-      const response = await fetch('https://example.com/api/detect', {
+      const baseUrl = syncService.getApiBaseUrl();
+      const formData = new FormData();
+      formData.append('file', {
+        uri: image.uri,
+        type: 'image/jpeg',
+        name: 'image.jpg',
+      });
+
+      const response = await fetch(`${baseUrl}/admin/detect`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ image: imageData }),
+        body: formData,
       });
 
       if (!response.ok) {
@@ -66,7 +74,7 @@ const ReportScreen = () => {
 
       const responseData = await response.json();
       return {
-        label: responseData.label || 'Pothole',
+        label: responseData.type || 'Pothole',
         confidence: responseData.confidence || 0.87,
       };
     } catch (error) {
@@ -114,8 +122,9 @@ const ReportScreen = () => {
 
       // First, detect hazard type from image if available
       let detectionResult = { type: 'unknown', confidence: 0.0 };
-      if (capturedImage?.base64) {
+      if (capturedImage?.uri) {
         try {
+          const baseUrl = syncService.getApiBaseUrl();
           const formData = new FormData();
           formData.append('file', {
             uri: capturedImage.uri,
@@ -123,7 +132,7 @@ const ReportScreen = () => {
             name: 'image.jpg',
           });
 
-          const detectResponse = await fetch('http://localhost:8002/api/admin/detect', {
+          const detectResponse = await fetch(`${baseUrl}/admin/detect`, {
             method: 'POST',
             body: formData,
           });
@@ -149,7 +158,8 @@ const ReportScreen = () => {
         sensor_data: report.sensor_data,
       };
 
-      const response = await fetch('http://localhost:8002/api/admin/complaints', {
+      const baseUrl = syncService.getApiBaseUrl();
+      const response = await fetch(`${baseUrl}/admin/complaints`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(complaintData),
@@ -174,7 +184,7 @@ const ReportScreen = () => {
         history: sensorHistory,
       };
 
-      const result = await detectHazard(capturedImage?.base64);
+      const result = await detectHazard(capturedImage);
       setDetectionResult(result);
 
       const report = {

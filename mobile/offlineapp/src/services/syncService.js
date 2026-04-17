@@ -3,7 +3,7 @@ import axios from 'axios';
 import database from './database';
 import RNFS from 'react-native-fs';
 
-const API_BASE_URL = 'http://10.162.102.66:8002';
+const DEFAULT_API_BASE_URL = 'http://10.0.2.2:8002/api';
 
 const vibrateOnSyncSuccess = () => {
   try {
@@ -19,13 +19,26 @@ class SyncService {
     this.syncInterval = null;
     this.syncIntervalTime = 30000; // 30 seconds
     this.isOnline = true;
+    this.apiBaseUrl = DEFAULT_API_BASE_URL;
+  }
+
+  /**
+   * Get configured API base URL.
+   */
+  getApiBaseUrl() {
+    return this.apiBaseUrl || DEFAULT_API_BASE_URL;
   }
 
   /**
    * Set API base URL
    */
   setApiBaseUrl(url) {
-    this.apiBaseUrl = url;
+    if (!url || typeof url !== 'string') {
+      return;
+    }
+
+    const normalized = url.trim().replace(/\/$/, '');
+    this.apiBaseUrl = normalized;
   }
 
   /**
@@ -99,8 +112,9 @@ class SyncService {
       }
 
       // Send to backend
+      const baseUrl = this.getApiBaseUrl();
       const response = await axios.post(
-        `${API_BASE_URL}/complaints`,
+        `${baseUrl}/admin/complaints`,
         complaintData,
         {
           timeout: 30000,

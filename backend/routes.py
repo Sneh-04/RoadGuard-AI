@@ -143,32 +143,29 @@ async def detect_hazard(file: UploadFile = File(...)):
         if model:
             # Read image file
             contents = await file.read()
-            
+
             # Run YOLO inference
             results = model(contents)
-            
+
             # Extract results
             if results and len(results) > 0:
-            print(results)
-            result = results[0]
-            print(result.boxes)
-            if result.boxes and len(result.boxes) > 0:
-                print(result.boxes.cls)
-                print(result.boxes.conf)
+                result = results[0]
+                if result.boxes and len(result.boxes) > 0:
+                    confidences = result.boxes.conf
                     class_ids = result.boxes.cls
-                    max_conf_idx = confidences.argmax()
+                    max_conf_idx = int(confidences.argmax())
                     confidence = float(confidences[max_conf_idx])
                     class_id = int(class_ids[max_conf_idx])
-                    
+
                     # Map class id to type (assuming 0=pothole, 1=speedbreaker, 2=normal)
                     class_names = ['pothole', 'speedbreaker', 'normal']
                     hazard_type = class_names[class_id] if class_id < len(class_names) else 'unknown'
-                    
+
                     return {
                         "type": hazard_type,
                         "confidence": round(confidence, 2)
                     }
-        
+
         # Fallback: mock detection based on filename or random
         import random
         types = ['pothole', 'speedbreaker', 'normal']
@@ -176,7 +173,7 @@ async def detect_hazard(file: UploadFile = File(...)):
             "type": random.choice(types),
             "confidence": round(random.uniform(0.7, 0.95), 2)
         }
-        
+
     except Exception as e:
         logger.error(f"Detection failed: {e}")
         # Fallback

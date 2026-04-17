@@ -1,58 +1,54 @@
 import { useMemo } from 'react';
-import { AdminProvider, useAdminContext } from './context/AdminContext.jsx';
-import LoginPage from './pages/LoginPage.jsx';
-import Overview from './pages/Overview.jsx';
-import HazardMap from './pages/HazardMap.jsx';
-import Reports from './pages/Reports.jsx';
-import Users from './pages/Users.jsx';
-import Analytics from './pages/Analytics.jsx';
-import Settings from './pages/Settings.jsx';
-import Sidebar from './components/Sidebar.jsx';
-import TopNav from './components/TopNav.jsx';
-import Toast from './components/Toast.jsx';
+import { BrowserRouter, Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
+import HomePage from './pages/HomePage.jsx';
+import ActivityPage from './pages/ActivityPage.jsx';
+import ReportPage from './pages/ReportPage.jsx';
+import NavigatePage from './pages/NavigatePage.jsx';
+import ProfilePage from './pages/ProfilePage.jsx';
+import BottomNav from './components/BottomNav.jsx';
 
-function AdminShell() {
-  const { admin, activePage, setActivePage, toast } = useAdminContext();
+const routeMap = {
+  '/': 'home',
+  '/report': 'report',
+  '/navigate': 'navigate',
+  '/activity': 'activity',
+  '/profile': 'profile',
+};
 
-  const page = useMemo(() => {
-    switch (activePage) {
-      case 'overview':
-        return <Overview />;
-      case 'map':
-        return <HazardMap />;
-      case 'reports':
-        return <Reports />;
-      case 'users':
-        return <Users />;
-      case 'analytics':
-        return <Analytics />;
-      case 'settings':
-        return <Settings />;
-      default:
-        return <Overview />;
-    }
-  }, [activePage]);
+function AppShell() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const activePage = routeMap[location.pathname] || 'home';
 
-  if (!admin) return <LoginPage />;
+  const handleNavChange = (key) => {
+    const path = Object.entries(routeMap).find(([, value]) => value === key)?.[0] || '/';
+    navigate(path);
+  };
 
   return (
-    <div className="flex h-screen bg-gray-100">
-      <Sidebar />
-      <div className="flex-1 flex flex-col">
-        <TopNav />
-        <main className="flex-1 p-6 overflow-auto">
-          {page}
+    <div className="min-h-screen bg-[#0f2f2f] text-slate-100">
+      <div className="mx-auto max-w-6xl px-4 py-4 sm:px-6 lg:px-8">
+        <main className="min-h-[calc(100vh-132px)] pb-36">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/report" element={<ReportPage />} />
+            <Route path="/navigate" element={<NavigatePage />} />
+            <Route path="/activity" element={<ActivityPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
         </main>
       </div>
-      {toast && <Toast message={toast.message} type={toast.type} onClose={toast.close} />}
+
+      <BottomNav active={activePage} onChange={handleNavChange} />
     </div>
   );
 }
 
 export default function App() {
   return (
-    <AdminProvider>
-      <AdminShell />
-    </AdminProvider>
+    <BrowserRouter>
+      <AppShell />
+    </BrowserRouter>
   );
 }

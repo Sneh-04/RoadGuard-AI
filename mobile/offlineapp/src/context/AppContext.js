@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import database from '../services/database';
 import syncService from '../services/syncService';
 import locationService from '../services/locationService';
@@ -54,6 +55,12 @@ export const AppProvider = ({ children }) => {
 
         // Initialize network monitoring
         networkService.initNetworkMonitoring();
+
+        // Load backend API configuration
+        const apiBaseUrl = await AsyncStorage.getItem('API_BASE_URL');
+        if (apiBaseUrl) {
+          syncService.setApiBaseUrl(apiBaseUrl);
+        }
 
         // Get initial network state
         const netState = await networkService.getNetworkState();
