@@ -1,7 +1,8 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import Card from '../components/Card';
 import ToggleSwitch from '../components/ToggleSwitch';
-import { User, Mail, Phone, MapPin, FileText, CheckCircle, Lock, Bell, Moon, Server } from 'lucide-react';
+import { User, Mail, Phone, MapPin, FileText, CheckCircle, Lock, Bell, Moon, Server, Zap } from 'lucide-react';
 
 const Profile = () => {
   const [notifications, setNotifications] = useState(true);
@@ -86,6 +87,18 @@ const Profile = () => {
           </div>
         </div>
       </Card>
+
+      <Link to="/sensor-test">
+        <Card className="bg-gradient-to-r from-primary/20 to-purple-500/20 hover:shadow-lg hover:shadow-primary/30 transition cursor-pointer">
+          <div className="flex items-center gap-3">
+            <Zap className="text-primary" size={28} />
+            <div>
+              <h3 className="text-lg font-semibold">Sensor Testing</h3>
+              <p className="text-sm text-white/70">Test accelerometer hazard detection</p>
+            </div>
+          </div>
+        </Card>
+      </Link>
     </div>
   );
 };
