@@ -1,8 +1,8 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// Get backend URL from environment or use deployed default
-const backendUrl = process.env.VITE_BACKEND_URL || 'https://roadguard-ai-2.onrender.com';
+// Get backend URL from environment or use local development default
+const backendUrl = process.env.VITE_BACKEND_URL || 'http://localhost:8000';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -11,7 +11,8 @@ export default defineConfig({
     proxy: {
       '/api': {
         target: backendUrl,
-        changeOrigin: true
+        changeOrigin: true,
+        rewrite: (path) => path
       }
     }
   }

@@ -812,7 +812,8 @@ def predict(
 )
 async def predict_multimodal(
     request: MultimodalPredictionRequest,
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
 ) -> MultimodalPredictionResponse:
     """Run multimodal sensor-vision fusion inference.
     
@@ -909,7 +910,6 @@ async def predict_multimodal(
         logger.info(f"Multimodal prediction successful: {result}")
         
         # Save event to database
-        db = next(get_db())
         try:
             # Check for duplicates before saving
             recent_events = get_all_events(db, include_duplicates=True)
@@ -940,8 +940,6 @@ async def predict_multimodal(
             logger.info(f"Event saved to database (duplicate: {is_dup})")
         except Exception as db_e:
             logger.error(f"Failed to save event to database: {db_e}")
-        finally:
-            db.close()
         
         return MultimodalPredictionResponse(**result)
     except InferenceError as e:
@@ -1066,9 +1064,8 @@ def predict_batch(
     summary="Get all hazard events",
     description="Retrieve all stored hazard detection events"
 )
-def get_events(include_duplicates: bool = False):
+def get_events(db: Session = Depends(get_db), include_duplicates: bool = False):
     """Get all hazard events from database."""
-    db = next(get_db())
     try:
         events = get_all_events(db, include_duplicates)
         # Convert to dict format
@@ -1088,8 +1085,9 @@ def get_events(include_duplicates: bool = False):
                 "is_duplicate": event.is_duplicate
             })
         return {"events": event_list}
-    finally:
-        db.close()
+    except Exception as e:
+        logger.error(f"Error retrieving events: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail="Failed to retrieve events")
 
 
 @app.get(
@@ -1098,7 +1096,7 @@ def get_events(include_duplicates: bool = False):
     summary="Get events by hazard type",
     description="Retrieve hazard events filtered by label (0=Normal, 1=SpeedBreaker, 2=Pothole)"
 )
-def get_events_by_type(label: int, include_duplicates: bool = False):
+def get_events_by_type(label: int, db: Session = Depends(get_db), include_duplicates: bool = False):
     """Get hazard events filtered by label."""
     if label not in [0, 1, 2]:
         raise HTTPException(
@@ -1106,7 +1104,6 @@ def get_events_by_type(label: int, include_duplicates: bool = False):
             detail="Label must be 0 (Normal), 1 (SpeedBreaker), or 2 (Pothole)"
         )
     
-    db = next(get_db())
     try:
         events = get_events_by_label(db, label, include_duplicates)
         # Convert to dict format
@@ -1126,8 +1123,9 @@ def get_events_by_type(label: int, include_duplicates: bool = False):
                 "is_duplicate": event.is_duplicate
             })
         return {"events": event_list}
-    finally:
-        db.close()
+    except Exception as e:
+        logger.error(f"Error retrieving events by label {label}: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail="Failed to retrieve events")
 
 
 # ============================================================================
