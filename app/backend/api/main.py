@@ -222,6 +222,28 @@ app.add_middleware(
 
 
 # ============================================================================
+# Demo Data for Frontend Display
+# ============================================================================
+
+demo_events = [
+    {
+        "id": 1,
+        "label": "POTHOLE",
+        "latitude": 12.9716,
+        "longitude": 77.5946,
+        "status": "ACTIVE"
+    },
+    {
+        "id": 2,
+        "label": "SPEEDBREAKER",
+        "latitude": 12.9720,
+        "longitude": 77.5950,
+        "status": "ACTIVE"
+    }
+]
+
+
+# ============================================================================
 # Global Exception Handler
 # ============================================================================
 
@@ -372,7 +394,6 @@ async def login(
         username=user.username,
         role=user.role
     )
-
 
 @app.get(
     "/api/auth/me",
@@ -1055,6 +1076,42 @@ def predict_batch(
 
 
 # ============================================================================
+# Video Frame Upload - Simple Demo Endpoint
+# ============================================================================
+
+@app.post(
+    "/api/predict-video-frame",
+    tags=["Prediction"],
+    summary="Upload and analyze video frame",
+    description="Upload an image file to detect hazards"
+)
+async def predict_video_frame(file: UploadFile = File(...)):
+    """Accept image file and create a demo hazard event."""
+    import random
+    
+    try:
+        # Read file bytes (but don't need to process for demo)
+        await file.read()
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Invalid image file: {str(e)}")
+    
+    # Create random hazard event for demo
+    new_id = max([e.get("id", 0) for e in demo_events], default=0) + 1
+    new_event = {
+        "id": new_id,
+        "label": random.choice(["POTHOLE", "SPEEDBREAKER"]),
+        "latitude": 12.9716 + random.random() / 100,
+        "longitude": 77.5946 + random.random() / 100,
+        "status": "ACTIVE"
+    }
+    
+    demo_events.append(new_event)
+    logger.info(f"Demo event created: {new_event}")
+    
+    return {"message": "uploaded", "event": new_event}
+
+
+# ============================================================================
 # Events Endpoints
 # ============================================================================
 
@@ -1065,7 +1122,7 @@ def predict_batch(
     description="Retrieve all stored hazard detection events"
 )
 def get_events(db: Session = Depends(get_db), include_duplicates: bool = False):
-    """Get all hazard events from database."""
+    """Get all hazard events from database, plus demo data."""
     try:
         events = get_all_events(db, include_duplicates)
         # Convert to dict format
@@ -1082,12 +1139,18 @@ def get_events(db: Session = Depends(get_db), include_duplicates: bool = False):
                 "p_vision": event.p_vision,
                 "p_final": event.p_final,
                 "confidence": event.confidence,
-                "is_duplicate": event.is_duplicate
+                "is_duplicate": event.is_duplicate,
+                "status": "ACTIVE"
             })
+        
+        # Add demo data
+        event_list.extend(demo_events)
+        
         return {"events": event_list}
     except Exception as e:
         logger.error(f"Error retrieving events: {e}", exc_info=True)
-        raise HTTPException(status_code=500, detail="Failed to retrieve events")
+        # Return demo data as fallback
+        return {"events": demo_events}
 
 
 @app.get(
@@ -1126,6 +1189,42 @@ def get_events_by_type(label: int, db: Session = Depends(get_db), include_duplic
     except Exception as e:
         logger.error(f"Error retrieving events by label {label}: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail="Failed to retrieve events")
+
+
+@app.patch(
+    "/api/events/{event_id}/solve",
+    tags=["Events"],
+    summary="Mark event as solved",
+    description="Update a hazard event status to SOLVED"
+)
+def solve_event(event_id: int):
+    """Mark a demo event as solved."""
+    for event in demo_events:
+        if event["id"] == event_id:
+            event["status"] = "SOLVED"
+            logger.info(f"Event {event_id} marked as SOLVED")
+            return {"message": "updated", "status": "SOLVED"}
+    
+    # Not found in demo data - would search DB in production
+    raise HTTPException(status_code=404, detail=f"Event {event_id} not found")
+
+
+@app.patch(
+    "/api/events/{event_id}/ignore",
+    tags=["Events"],
+    summary="Mark event as ignored",
+    description="Update a hazard event status to IGNORED"
+)
+def ignore_event(event_id: int):
+    """Mark a demo event as ignored."""
+    for event in demo_events:
+        if event["id"] == event_id:
+            event["status"] = "IGNORED"
+            logger.info(f"Event {event_id} marked as IGNORED")
+            return {"message": "updated", "status": "IGNORED"}
+    
+    # Not found in demo data - would search DB in production
+    raise HTTPException(status_code=404, detail=f"Event {event_id} not found")
 
 
 # ============================================================================

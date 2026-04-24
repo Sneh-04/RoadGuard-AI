@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Card from '../components/Card.jsx';
 import MapView from '../components/MapView.jsx';
 import Badge from '../components/Badge.jsx';
@@ -11,6 +11,21 @@ const destinations = [
 
 export default function NavigatePage() {
   const [destination, setDestination] = useState('Chennai Central');
+  const [events, setEvents] = useState([]);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const res = await fetch('http://localhost:8000/api/events');
+        const data = await res.json();
+        setEvents(data.events || []);
+      } catch (err) {
+        console.error('Failed to fetch events:', err);
+      }
+    };
+
+    fetchEvents();
+  }, []);
 
   return (
     <div className="space-y-6 pb-28">
@@ -32,7 +47,7 @@ export default function NavigatePage() {
         </div>
       </Card>
 
-      <MapView />
+      <MapView events={events} />
 
       <Card title="Route overview" subtitle="Current hazards and route confidence">
         <div className="space-y-4">

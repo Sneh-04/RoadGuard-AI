@@ -58,39 +58,28 @@ export default function UploadPage() {
     setResult(null);
 
     try {
-      const reader = new FileReader();
-      reader.onloadend = async () => {
-        const base64 = reader.result.split(',')[1];
-        console.log('📤 Uploading image to backend...');
-        const response = await fetch('http://localhost:8000/api/predict-video-frame', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ image_base64: base64 }),
-        });
+      const formData = new FormData();
+      formData.append("file", file);
 
-        if (!response.ok) {
-          const errorData = await response.text();
-          throw new Error(`Backend error: ${response.status}`);
-        }
+      const res = await fetch("http://localhost:8000/api/predict-video-frame", {
+        method: "POST",
+        body: formData
+      });
 
-        const data = await response.json();
-        console.log('✅ Response from backend:', data);
-        setResult(data);
-        setFile(null);
-        setPreview(null);
+      const data = await res.json();
+      console.log('✅ Response from backend:', data);
+      setResult(data);
+      setFile(null);
+      setPreview(null);
 
-        if (data.event) {
-          console.log('📍 Adding hazard to real-time updates');
-          addHazard(data.event);
-        }
+      if (data.event) {
+        console.log('📍 Adding hazard to real-time updates');
+        addHazard(data.event);
+      }
 
-        setTimeout(() => {
-          setResult(null);
-        }, 5000);
-      };
-      reader.readAsDataURL(file);
+      setTimeout(() => {
+        setResult(null);
+      }, 5000);
     } catch (err) {
       console.error('❌ Upload error:', err);
       setError(err.message || 'Failed to upload image');

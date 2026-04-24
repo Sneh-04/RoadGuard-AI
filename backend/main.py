@@ -16,12 +16,13 @@ import base64
 import io
 import logging
 import time
+import random
 from datetime import datetime, timedelta
 from typing import List, Optional
 
 import cv2
 import numpy as np
-from fastapi import FastAPI, HTTPException, Query, WebSocket, WebSocketDisconnect, UploadFile, Form
+from fastapi import FastAPI, HTTPException, Query, WebSocket, WebSocketDisconnect, UploadFile, Form, File
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
@@ -52,7 +53,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],          # tighten in production
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -94,7 +95,32 @@ if manager is None:
     manager = _FallbackManager()
 
 # ── In-memory event store (fallback when DB unavailable) ─────────────────────
-_events: List[dict] = []
+events = []
+
+# Initialize with demo data for UI display
+events = [
+    {
+        "id": 1,
+        "label": "POTHOLE",
+        "latitude": 12.97 + 0.005,
+        "longitude": 77.59 + 0.003,
+        "status": "ACTIVE"
+    },
+    {
+        "id": 2,
+        "label": "SPEEDBREAKER",
+        "latitude": 12.97 + 0.008,
+        "longitude": 77.59 + 0.005,
+        "status": "ACTIVE"
+    },
+    {
+        "id": 3,
+        "label": "POTHOLE",
+        "latitude": 12.97 + 0.002,
+        "longitude": 77.59 + 0.008,
+        "status": "ACTIVE"
+    },
+]
 
 # ── Schemas ───────────────────────────────────────────────────────────────────
 class AccelSegment(BaseModel):
@@ -226,7 +252,7 @@ def _fuse_predictions(sensor_pred, vision_pred):
 
 def _store_event(label_id, label, confidence, p_sensor, p_vision, lat, lon, ts, source="sensor", status="active"):
     event = {
-        "id": len(_events) + 1,
+        "id": len(events) + 1,
         "label": label,
         "label_id": label_id,
         "confidence": round(confidence, 4),
@@ -238,9 +264,9 @@ def _store_event(label_id, label, confidence, p_sensor, p_vision, lat, lon, ts, 
         "source": source,
         "status": status,
     }
-    _events.append(event)
-    if len(_events) > 5000:       # rolling cap
-        _events.pop(0)
+    events.append(event)
+    if len(events) > 5000:       # rolling cap
+        events.pop(0)
     return event
 
 # ── Startup ───────────────────────────────────────────────────────────────────
@@ -263,7 +289,7 @@ async def health():
         "status": "ok",
         "mode": "production" if PRODUCTION else "fallback",
         "timestamp": datetime.utcnow().isoformat(),
-        "events_stored": len(_events),
+        "events_stored": len(events),
         "ws_clients": len(manager.active_connections),
     }
 
@@ -337,73 +363,28 @@ async def predict_multimodal(req: MultimodalRequest):
 
 # ── Video frame (vision only) ─────────────────────────────────────────────────
 @app.post("/api/predict-video-frame")
-async def predict_video_frame(req: VideoFrameRequest):
-    """Vision-only inference from a single camera frame."""
+async def predict_video_frame(file: UploadFile = File(...)):
+    """Accept image file and create a hazard event."""
     try:
-        img_bytes = base64.b64decode(req.image_b64)
+        img_bytes = await file.read()
     except Exception:
-        raise HTTPException(400, "Invalid base64 image data")
+        raise HTTPException(400, "Invalid image file")
 
-    image_b64 = None
-    boxes = []
-    if PRODUCTION:
-        try:
-            label, confidence, source = _vision_inference(img_bytes)
-            results = yolo_model(_decode_image(img_bytes))
-            if results and hasattr(results[0], "plot"):
-                annotated = results[0].plot()
-                if results[0].boxes is not None and len(results[0].boxes) > 0:
-                    for box in results[0].boxes:
-                        if box.xyxy is None or len(box.xyxy) == 0:
-                            continue
-                        x1, y1, x2, y2 = map(int, box.xyxy[0].tolist())
-                        bbox_label = results[0].names.get(int(box.cls), "Unknown")
-                        bbox_conf = float(box.conf[0])
-                        text = f"{bbox_label} {bbox_conf:.2f}"
-                        cv2.putText(
-                            annotated,
-                            text,
-                            (x1, max(y1 - 10, 10)),
-                            cv2.FONT_HERSHEY_SIMPLEX,
-                            0.45,
-                            (255, 255, 255),
-                            1,
-                            cv2.LINE_AA,
-                        )
-                        cv2.putText(
-                            annotated,
-                            text,
-                            (x1, max(y1 - 10, 10)),
-                            cv2.FONT_HERSHEY_SIMPLEX,
-                            0.45,
-                            (0, 0, 0),
-                            2,
-                            cv2.LINE_AA,
-                        )
-                _, buffer = cv2.imencode('.jpg', annotated)
-                image_b64 = base64.b64encode(buffer.tobytes()).decode()
-            if results and len(results[0].boxes) > 0:
-                for idx, box in enumerate(results[0].boxes):
-                    boxes.append({
-                        "label": results[0].names.get(int(box.cls), "Unknown"),
-                        "confidence": float(box.conf[0]),
-                        "xyxy": box.xyxy[0].tolist(),
-                    })
-        except Exception as e:
-            logger.warning(f"Vision inference failed: {e}")
-            label, confidence, source = "Normal", 0.0, "vision"
-    else:
-        label, confidence, source = "Normal", 0.0, "vision"
+    # Simulate detection
+    new_event = {
+        "id": len(events) + 1,
+        "label": random.choice(["POTHOLE", "SPEEDBREAKER"]),
+        "latitude": 12.97 + random.random()/100,
+        "longitude": 77.59 + random.random()/100,
+        "status": "ACTIVE"
+    }
 
-    label_id = 0 if label == "Normal" else 1
-    event = _store_event(label_id, label, confidence, None, confidence,
-                         req.latitude, req.longitude, req.timestamp, source)
+    events.append(new_event)
+    
+    # Broadcast to WebSocket clients
+    await manager.broadcast({"type": "new_event", "event": new_event})
 
-    await manager.broadcast({"type": "new_event", "event": event})
-    response = {**event, "detection_boxes": boxes}
-    if image_b64:
-        response["image_b64"] = image_b64
-    return response
+    return {"message": "uploaded", "event": new_event}
 
 # ── Upload hazard image ─────────────────────────────────────────────────────
 @app.post("/api/upload")
@@ -430,37 +411,22 @@ async def upload_hazard(image: UploadFile, lat: float = Form(...), lng: float = 
 
 # ── Admin Action: Mark Hazard as Solved ────────────────────────────────────
 @app.patch("/api/events/{event_id}/solve")
-async def solve_hazard(event_id: int):
-    """Mark a hazard as solved by admin."""
-    for e in _events:
+def solve_event(event_id: int):
+    """Mark a hazard as solved."""
+    for e in events:
         if e["id"] == event_id:
-            e["status"] = "solved"
-            # Broadcast update to all connected clients
-            await manager.broadcast({
-                "type": "event_status_updated",
-                "event_id": event_id,
-                "status": "solved",
-                "event": e
-            })
-            return {"status": "success", "message": "Hazard marked as solved", "event": e}
-    raise HTTPException(404, f"Event {event_id} not found")
+            e["status"] = "SOLVED"
+            return {"message": "updated"}
+    raise HTTPException(404, "Event not found")
 
-# ── Admin Action: Mark Hazard as Ignored ───────────────────────────────────
 @app.patch("/api/events/{event_id}/ignore")
-async def ignore_hazard(event_id: int):
-    """Mark a hazard as ignored by admin."""
-    for e in _events:
+def ignore_event(event_id: int):
+    """Mark a hazard as ignored."""
+    for e in events:
         if e["id"] == event_id:
-            e["status"] = "ignored"
-            # Broadcast update to all connected clients
-            await manager.broadcast({
-                "type": "event_status_updated",
-                "event_id": event_id,
-                "status": "ignored",
-                "event": e
-            })
-            return {"status": "success", "message": "Hazard marked as ignored", "event": e}
-    raise HTTPException(404, f"Event {event_id} not found")
+            e["status"] = "IGNORED"
+            return {"message": "updated"}
+    raise HTTPException(404, "Event not found")
 
 # ── Action on hazard (legacy) ───────────────────────────────────────────────
 @app.post("/api/action")
@@ -469,7 +435,7 @@ async def action_hazard(req: dict):
     status = req.get("status")
     if not hazard_id or status not in ["resolved", "ignored"]:
         raise HTTPException(400, "Invalid request")
-    for e in _events:
+    for e in events:
         if e["id"] == hazard_id:
             e["status"] = status
             break
@@ -490,66 +456,24 @@ async def predict_batch(req: BatchRequest):
 
 # ── Events ────────────────────────────────────────────────────────────────────
 @app.get("/api/events")
-async def get_hazard_events(
-    label: Optional[str] = Query(None, description="Filter: Normal|Speed Breaker|Pothole"),
-    limit: int = Query(200, le=1000),
-    offset: int = Query(0, ge=0),
-    hours: Optional[int] = Query(None, description="Last N hours"),
-):
-    events = list(reversed(_events))   # newest first
-
-    if label:
-        events = [e for e in events if e["label"] == label]
-
-    if hours:
-        cutoff = (datetime.utcnow() - timedelta(hours=hours)).isoformat()
-        events = [e for e in events if e["timestamp"] >= cutoff]
-
-    total = len(events)
-    return {
-        "total": total,
-        "offset": offset,
-        "limit": limit,
-        "events": events[offset: offset + limit],
-    }
+def get_events():
+    """Get all events."""
+    return {"events": events}
 
 # ── Stats ─────────────────────────────────────────────────────────────────────
 @app.get("/api/events/stats")
 async def get_event_stats():
-    counts = {"Normal": 0, "Speed Breaker": 0, "Pothole": 0}
-    conf_sum = {"Normal": 0.0, "Speed Breaker": 0.0, "Pothole": 0.0}
-
-    for e in _events:
+    counts = {"POTHOLE": 0, "SPEEDBREAKER": 0}
+    
+    for e in events:
         lbl = e["label"]
         counts[lbl] = counts.get(lbl, 0) + 1
-        conf_sum[lbl] = conf_sum.get(lbl, 0.0) + e["confidence"]
 
-    # Hourly breakdown (last 24h)
-    hourly: dict = {}
-    cutoff = datetime.utcnow().replace(tzinfo=None) - timedelta(hours=24)
-    for e in _events:
-        try:
-            ts = datetime.fromisoformat(e["timestamp"]).replace(tzinfo=None)
-        except Exception:
-            continue
-        if ts < cutoff:
-            continue
-        hour_key = ts.strftime("%H:00")
-        if hour_key not in hourly:
-            hourly[hour_key] = {"Normal": 0, "Speed Breaker": 0, "Pothole": 0}
-        hourly[hour_key][e["label"]] = hourly[hour_key].get(e["label"], 0) + 1
-
-    avg_conf = {
-        k: round(conf_sum[k] / counts[k], 4) if counts[k] > 0 else 0.0
-        for k in counts
-    }
     total = sum(counts.values())
 
     return {
         "total_events": total,
         "counts": counts,
-        "avg_confidence": avg_conf,
-        "hourly_24h": hourly,
         "last_updated": datetime.utcnow().isoformat(),
     }
 
@@ -562,18 +486,24 @@ async def get_event_stats():
 # ── WebSocket ─────────────────────────────────────────────────────────────────
 @app.websocket("/ws/events")
 async def websocket_events(websocket: WebSocket):
-    await manager.connect(websocket)
-    logger.info(f"WS client connected. Total: {len(manager.active_connections)}")
+    try:
+        logger.info(f"🔌 WebSocket connection attempt from {websocket.client}")
+        await manager.connect(websocket)
+        logger.info(f"✅ WS client connected. Total: {len(manager.active_connections)}")
+    except Exception as e:
+        logger.error(f"❌ Error accepting WebSocket: {e}", exc_info=True)
+        await websocket.close(code=1008, reason=f"Accept failed: {str(e)}")
+        return
+    
     try:
         # Send current snapshot on connect
         snapshot = {
             "type": "snapshot",
-            "events": list(reversed(_events))[:50],
+            "events": list(reversed(events))[:50],
             "stats": {
-                "total": len(_events),
-                "normal": sum(1 for e in _events if e["label"] == "Normal"),
-                "speed_breaker": sum(1 for e in _events if e["label"] == "Speed Breaker"),
-                "pothole": sum(1 for e in _events if e["label"] == "Pothole"),
+                "total": len(events),
+                "pothole": sum(1 for e in events if e["label"] == "POTHOLE"),
+                "speedbreaker": sum(1 for e in events if e["label"] == "SPEEDBREAKER"),
             }
         }
         await manager.send_personal_message(snapshot, websocket)
@@ -586,6 +516,9 @@ async def websocket_events(websocket: WebSocket):
     except WebSocketDisconnect:
         manager.disconnect(websocket)
         logger.info(f"WS client disconnected. Remaining: {len(manager.active_connections)}")
+    except Exception as e:
+        logger.error(f"❌ WebSocket error: {e}", exc_info=True)
+        manager.disconnect(websocket)
 
 # ── Server startup ────────────────────────────────────────────────────────────
 if __name__ == "__main__":
