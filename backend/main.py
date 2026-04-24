@@ -428,7 +428,41 @@ async def upload_hazard(image: UploadFile, lat: float = Form(...), lng: float = 
     await manager.broadcast({"type": "new_event", "event": event})
     return {"status": "success", "hazard": label, "confidence": confidence}
 
-# ── Action on hazard ───────────────────────────────────────────────────────
+# ── Admin Action: Mark Hazard as Solved ────────────────────────────────────
+@app.patch("/api/events/{event_id}/solve")
+async def solve_hazard(event_id: int):
+    """Mark a hazard as solved by admin."""
+    for e in _events:
+        if e["id"] == event_id:
+            e["status"] = "solved"
+            # Broadcast update to all connected clients
+            await manager.broadcast({
+                "type": "event_status_updated",
+                "event_id": event_id,
+                "status": "solved",
+                "event": e
+            })
+            return {"status": "success", "message": "Hazard marked as solved", "event": e}
+    raise HTTPException(404, f"Event {event_id} not found")
+
+# ── Admin Action: Mark Hazard as Ignored ───────────────────────────────────
+@app.patch("/api/events/{event_id}/ignore")
+async def ignore_hazard(event_id: int):
+    """Mark a hazard as ignored by admin."""
+    for e in _events:
+        if e["id"] == event_id:
+            e["status"] = "ignored"
+            # Broadcast update to all connected clients
+            await manager.broadcast({
+                "type": "event_status_updated",
+                "event_id": event_id,
+                "status": "ignored",
+                "event": e
+            })
+            return {"status": "success", "message": "Hazard marked as ignored", "event": e}
+    raise HTTPException(404, f"Event {event_id} not found")
+
+# ── Action on hazard (legacy) ───────────────────────────────────────────────
 @app.post("/api/action")
 async def action_hazard(req: dict):
     hazard_id = req.get("id")

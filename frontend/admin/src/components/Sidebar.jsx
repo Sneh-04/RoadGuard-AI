@@ -1,67 +1,97 @@
-import { BarChart3, MapPin, ClipboardList, Users, Gauge, Settings, LogOut } from 'lucide-react';
-import { useAdminContext } from '../context/AdminContext.jsx';
+import { Link, useLocation } from 'react-router-dom';
+import { Home, Upload, Map, BarChart3, User, Shield, Menu } from 'lucide-react';
+import { useState } from 'react';
 
 const navItems = [
-  { id: 'overview', label: 'Overview', icon: Gauge },
-  { id: 'map', label: 'Hazard map', icon: MapPin },
-  { id: 'reports', label: 'Reports', icon: ClipboardList },
-  { id: 'users', label: 'Users', icon: Users },
-  { id: 'analytics', label: 'Analytics', icon: BarChart3 },
-  { id: 'settings', label: 'Settings', icon: Settings },
+  { label: 'Dashboard', icon: Home, path: '/', admin: false },
+  { label: 'Upload', icon: Upload, path: '/upload', admin: false },
+  { label: 'Map', icon: Map, path: '/map', admin: false },
+  { label: 'Analytics', icon: BarChart3, path: '/analytics', admin: false },
+  { label: 'Profile', icon: User, path: '/profile', admin: false },
+  { label: 'Admin', icon: Shield, path: '/admin', admin: true },
 ];
 
-export default function Sidebar() {
-  const { admin, activePage, setActivePage, logout } = useAdminContext();
+export default function Sidebar({ isAdmin, onAdminToggle }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
+
+  const visibleItems = navItems.filter(item => {
+    if (isAdmin) return true;
+    return !item.admin;
+  });
+
+  const isActive = (path) => location.pathname === path || location.pathname.startsWith(path + '/');
 
   return (
-    <aside className="w-64 bg-white shadow-lg">
-      <div className="p-6 border-b">
-        <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold">
-            RG
-          </div>
-          <div>
-            <h1 className="font-bold text-lg">RoadGuard</h1>
-            <p className="text-sm text-gray-500">Admin Console</p>
-          </div>
-        </div>
-      </div>
+    <>
+      {/* Mobile Menu Button */}
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="fixed top-4 left-4 z-50 md:hidden p-2 rounded-lg bg-slate-800 text-slate-100 hover:bg-slate-700"
+      >
+        <Menu size={24} />
+      </button>
 
-      <nav className="p-4">
-        {navItems.map((item) => {
-          const Icon = item.icon;
-          return (
-            <button
-              key={item.id}
-              type="button"
-              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                activePage === item.id
-                  ? 'bg-blue-100 text-blue-700'
-                  : 'text-gray-700 hover:bg-gray-100'
-              }`}
-              onClick={() => setActivePage(item.id)}
-            >
-              <Icon size={18} />
-              <span>{item.label}</span>
-            </button>
-          );
-        })}
-      </nav>
-
-      <div className="absolute bottom-0 w-64 p-4 border-t bg-white">
-        <div className="mb-4">
-          <p className="font-medium">{admin?.email || 'Admin'}</p>
-          <p className="text-sm text-gray-500">Administrator</p>
+      {/* Sidebar */}
+      <aside
+        className={`fixed md:relative w-64 h-screen bg-slate-800 border-r border-slate-700 flex flex-col transition-transform duration-300 ${
+          isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
+        } z-40 md:z-0`}
+      >
+        {/* Logo */}
+        <div className="p-6 border-b border-slate-700">
+          <h1 className="text-xl font-bold text-cyan-400">RoadGuard</h1>
+          <p className="text-xs text-slate-400 mt-1">AI Road Safety</p>
         </div>
-        <button
-          type="button"
-          className="w-full flex items-center space-x-2 px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg"
-          onClick={logout}
-        >
-          <LogOut size={16} />
-          <span>Sign out</span>
-        </button>
-      </div>
-    </aside>
+
+        {/* Navigation */}
+        <nav className="flex-1 overflow-y-auto p-4 space-y-2">
+          {visibleItems.map((item) => {
+            const Icon = item.icon;
+            const active = isActive(item.path);
+            return (
+              <Link
+                key={item.path}
+                to={item.path}
+                onClick={() => setIsOpen(false)}
+                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
+                  active
+                    ? 'bg-cyan-600 text-white'
+                    : 'text-slate-300 hover:bg-slate-700'
+                }`}
+              >
+                <Icon size={20} />
+                <span className="text-sm font-medium">{item.label}</span>
+              </Link>
+            );
+          })}
+        </nav>
+
+        {/* Admin Toggle */}
+        <div className="p-4 border-t border-slate-700 space-y-2">
+          <button
+            onClick={() => {
+              onAdminToggle(!isAdmin);
+              setIsOpen(false);
+            }}
+            className={`w-full px-4 py-2 rounded-lg transition-colors text-sm font-medium ${
+              isAdmin
+                ? 'bg-amber-600 text-white'
+                : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+            }`}
+          >
+            {isAdmin ? '👤 User Mode' : '🛡️ Admin Mode'}
+          </button>
+        </div>
+      </aside>
+
+      {/* Mobile Overlay */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 md:hidden z-30"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
+    </>
   );
 }

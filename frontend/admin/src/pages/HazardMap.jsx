@@ -1,8 +1,8 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
-import { useAdminContext } from '../context/AdminContext.jsx';
 import { AlertTriangle, MapPin, Calendar } from 'lucide-react';
+import 'leaflet/dist/leaflet.css';
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -11,17 +11,26 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
 });
 
-const getStatusColor = (severity) => {
-  switch (severity) {
-    case 'High': return 'red';
-    case 'Medium': return 'orange';
-    case 'Low': return 'green';
-    default: return 'gray';
-  }
+const getHazardColor = (label) => {
+  if (label === 0 || label === 'Normal') return 'blue';
+  if (label === 1 || label === 'speedbreaker' || label === 'Speed Breaker') return 'orange';
+  if (label === 2 || label === 'pothole' || label === 'Pothole') return 'red';
+  return 'gray';
 };
 
-const createCustomIcon = (severity) => {
-  const color = getStatusColor(severity);
+const getStatusColor = (label) => {
+  const color = getHazardColor(label);
+  const colorMap = {
+    'blue': '#3B82F6',
+    'orange': '#F59E0B',
+    'red': '#EF4444',
+    'gray': '#6B7280'
+  };
+  return colorMap[color] || '#6B7280';
+};
+
+const createCustomIcon = (label) => {
+  const color = getStatusColor(label);
   return L.divIcon({
     html: `<div style="background-color: ${color}; width: 20px; height: 20px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 4px rgba(0,0,0,0.3);"></div>`,
     className: 'custom-marker',
@@ -31,23 +40,112 @@ const createCustomIcon = (severity) => {
 };
 
 export default function HazardMap() {
-  const { reports, loading } = useAdminContext();
+  const [reports, setReports] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [selectedReport, setSelectedReport] = useState(null);
 
+  useEffect(() => {
+    const fetchReports = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch('http://localhost:8000/api/events');
+        const data = await response.json();
+        
+        if (data.events && Array.isArray(data.events)) {
+          setReports(data.events);
+        }
+        setLoading(false);
+      } catch (error) {
+        console.error('Failed to fetch reports:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchReports();
+  }, []);
+
   const center = useMemo(() => {
-    if (!reports.length) return [13.0827, 80.2707]; // Default to Chennai
+    if (!reports.length) return [13.0827, 80.2707];
     const avgLat = reports.reduce((sum, r) => sum + r.latitude, 0) / reports.length;
     const avgLng = reports.reduce((sum, r) => sum + r.longitude, 0) / reports.length;
     return [avgLat, avgLng];
   }, [reports]);
 
   if (loading) {
-    return <div className="flex justify-center items-center h-64">Loading...</div>;
+    return (
+      <div className="flex justify-center items-center h-96 rounded-[2rem] border border-white/10 bg-[#0f2f2f]/70">
+        <div className="text-slate-100">Loading map data...</div>
+      </div>
+    );
   }
 
   return (
     <div className="space-y-6">
-      <div>
+      <div className="h-[560px] rounded-[2rem] border border-white/10 bg-[#0f2f2f]/70 shadow-[0_35px_80px_rgba(20,184,166,0.18)] backdrop-blur-xl overflow-hidden">
+        <MapContainer center={center} zoom={13} style={{ height: '100%', width: '100%' }}>
+          <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" attribution='&copy; OpenStreetMap contributors' />
+          {reports.map((report, idx) => (
+            <Marker
+              key={report.id || idx}
+              position={[report.latitude || 13.0827, report.longitude || 80.2707]}
+              icon={createCustomIcon(report.label)}
+              onClick={() => setSelectedReport(report)}
+            >
+              <Popup>
+                <div className="text-sm min-w-[220px]">
+                  <div className="flex items-center gap-2 mb-2">
+                    <AlertTriangle size={16} />
+                    <span className="font-bold">{report.label_name || 'Hazard'}</span>
+                  </div>
+                  <div className="space-y-1 text-xs text-gray-600">
+                    <p>Confidence: {(report.confidence * 100).toFixed(1)}%</p>
+                    <p className="flex items-center gap-1">
+                      <MapPin size={12} /> Lat: {report.latitude.toFixed(4)}, Lon: {report.longitude.toFixed(4)}
+                    </p>
+                    <p className="flex items-center gap-1">
+                      <Calendar size={12} /> {new Date(report.timestamp).toLocaleString()}
+                    </p>
+                    {report.p_sensor !== null && <p>Sensor: {(report.p_sensor * 100).toFixed(1)}%</p>}
+                    {report.p_vision !== null && <p>Vision: {(report.p_vision * 100).toFixed(1)}%</p>}
+                  </div>
+                </div>
+              </Popup>
+            </Marker>
+          ))}
+        </MapContainer>
+      </div>
+
+      <div className="grid gap-6">
+        <div className="rounded-[2rem] border border-white/10 bg-[#0f2f2f]/70 p-6 shadow-[0_35px_80px_rgba(20,184,166,0.18)] backdrop-blur-xl">
+          <h2 className="text-xl font-semibold text-slate-100 mb-4">Recent Hazard Reports ({reports.length})</h2>
+          <div className="space-y-3 max-h-96 overflow-y-auto">
+            {reports.slice(0, 10).map((report, idx) => (
+              <div
+                key={report.id || idx}
+                className="flex items-center justify-between rounded-[1.5rem] border border-white/10 bg-white/5 p-4 hover:bg-white/10 transition cursor-pointer"
+                onClick={() => setSelectedReport(report)}
+              >
+                <div className="flex-1">
+                  <p className="font-semibold text-slate-100">{report.label_name || 'Hazard'}</p>
+                  <p className="text-xs text-slate-400">
+                    {report.latitude.toFixed(4)}, {report.longitude.toFixed(4)} • {new Date(report.timestamp).toLocaleString()}
+                  </p>
+                  <p className="text-xs text-slate-400 mt-1">
+                    Confidence: {(report.confidence * 100).toFixed(1)}%
+                  </p>
+                </div>
+                <div
+                  className="w-3 h-3 rounded-full"
+                  style={{ backgroundColor: getStatusColor(report.label) }}
+                ></div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
         <h2 className="text-3xl font-bold text-gray-900">Hazard Map</h2>
         <p className="text-gray-600">Interactive map showing all reported hazards</p>
       </div>

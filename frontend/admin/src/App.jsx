@@ -1,46 +1,57 @@
-import { useMemo } from 'react';
-import { BrowserRouter, Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import TopNav from './components/TopNav.jsx';
+import Sidebar from './components/Sidebar.jsx';
+import { RealTimeProvider } from './context/RealTimeContext.jsx';
+
+// User Pages
 import HomePage from './pages/HomePage.jsx';
-import ActivityPage from './pages/ActivityPage.jsx';
-import ReportPage from './pages/ReportPage.jsx';
-import NavigatePage from './pages/NavigatePage.jsx';
+import UploadPage from './pages/UploadPage.jsx';
+import MapPage from './pages/MapPage.jsx';
+import AnalyticsPage from './pages/AnalyticsPage.jsx';
 import ProfilePage from './pages/ProfilePage.jsx';
-import BottomNav from './components/BottomNav.jsx';
 
-const routeMap = {
-  '/': 'home',
-  '/report': 'report',
-  '/navigate': 'navigate',
-  '/activity': 'activity',
-  '/profile': 'profile',
-};
+// Admin Pages
+import AdminDashboard from './pages/AdminDashboard.jsx';
+import AdminHazards from './pages/AdminHazards.jsx';
 
-function AppShell() {
+function AppLayout() {
+  const [isAdmin, setIsAdmin] = useState(false);
   const location = useLocation();
-  const navigate = useNavigate();
-  const activePage = routeMap[location.pathname] || 'home';
 
-  const handleNavChange = (key) => {
-    const path = Object.entries(routeMap).find(([, value]) => value === key)?.[0] || '/';
-    navigate(path);
-  };
+  const isAdminPath = location.pathname.startsWith('/admin');
 
   return (
-    <div className="min-h-screen bg-[#0f2f2f] text-slate-100">
-      <div className="mx-auto max-w-6xl px-4 py-4 sm:px-6 lg:px-8">
-        <main className="min-h-[calc(100vh-132px)] pb-36">
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/report" element={<ReportPage />} />
-            <Route path="/navigate" element={<NavigatePage />} />
-            <Route path="/activity" element={<ActivityPage />} />
-            <Route path="/profile" element={<ProfilePage />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
+    <div className="flex min-h-screen bg-slate-900 text-slate-100">
+      {/* Sidebar Navigation */}
+      <Sidebar isAdmin={isAdmin} onAdminToggle={setIsAdmin} />
+
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col">
+        {/* Top Navigation */}
+        <TopNav isAdmin={isAdmin} onAdminToggle={setIsAdmin} />
+
+        {/* Page Content */}
+        <main className="flex-1 overflow-auto">
+          <div className="min-h-full">
+            <Routes>
+              {/* User Routes */}
+              <Route path="/" element={<HomePage />} />
+              <Route path="/upload" element={<UploadPage />} />
+              <Route path="/map" element={<MapPage />} />
+              <Route path="/analytics" element={<AnalyticsPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
+
+              {/* Admin Routes */}
+              <Route path="/admin" element={<AdminDashboard />} />
+              <Route path="/admin/hazards" element={<AdminHazards />} />
+
+              {/* Catch All */}
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </div>
         </main>
       </div>
-
-      <BottomNav active={activePage} onChange={handleNavChange} />
     </div>
   );
 }
@@ -48,7 +59,9 @@ function AppShell() {
 export default function App() {
   return (
     <BrowserRouter>
-      <AppShell />
+      <RealTimeProvider>
+        <AppLayout />
+      </RealTimeProvider>
     </BrowserRouter>
   );
 }

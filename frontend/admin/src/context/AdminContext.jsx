@@ -8,7 +8,7 @@ const STORAGE_KEY = 'roadguard_admin_v1';
 const initialState = {
   admin: null,
   activePage: 'overview',
-  apiBase: 'http://localhost:8002/api/admin',
+  apiBase: 'http://localhost:8000/api',
   reports: [],
   users: [],
   analytics: {},
