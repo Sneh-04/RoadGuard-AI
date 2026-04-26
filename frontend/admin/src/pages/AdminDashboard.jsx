@@ -86,7 +86,7 @@ export default function AdminDashboard() {
 
       {/* Quick Actions */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <button className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-4 rounded-lg transition-colors">
+        <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 rounded-lg transition-colors">
           ✅ Mark Solved
         </button>
         <button className="bg-slate-700 hover:bg-slate-600 text-slate-100 font-semibold py-4 rounded-lg transition-colors">

@@ -101,42 +101,42 @@ export default function Navigate() {
   return (
     <main style={{ height: '100vh', position: 'relative' }}>
       <div style={{ position: 'absolute', top: 20, left: 20, right: 20, zIndex: 1000 }}>
-        <div style={{ background:'rgba(0,201,167,0.06)', border:'1px solid rgba(0,201,167,0.15)', borderRadius:20, padding:18, display: 'flex', flexDirection: 'column', gap: 12 }}>
+        <div style={{ background:'rgba(37,99,235,0.06)', border:'1px solid rgba(37,99,235,0.15)', borderRadius:20, padding:18, display: 'flex', flexDirection: 'column', gap: 12 }}>
           <label style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-            <span style={{ fontSize: 14, color: '#7EB8A8' }}>📍 Your Location</span>
-            <input style={{ padding: 12, borderRadius: 8, border: '1px solid rgba(0,201,167,0.15)', background: 'rgba(0,201,167,0.06)', color: '#E8FFF8' }} value={origin} onChange={(e) => setOrigin(e.target.value)} />
+            <span style={{ fontSize: 14, color: '#60a5fa' }}>📍 Your Location</span>
+            <input style={{ padding: 12, borderRadius: 8, border: '1px solid rgba(37,99,235,0.15)', background: 'rgba(37,99,235,0.06)', color: '#e0e7ff' }} value={origin} onChange={(e) => setOrigin(e.target.value)} />
           </label>
           <label style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-            <span style={{ fontSize: 14, color: '#7EB8A8' }}>🔴 Enter Destination</span>
-            <input style={{ padding: 12, borderRadius: 8, border: '1px solid rgba(0,201,167,0.15)', background: 'rgba(0,201,167,0.06)', color: '#E8FFF8' }} value={destination} onChange={(e) => setDestination(e.target.value)} />
+            <span style={{ fontSize: 14, color: '#60a5fa' }}>🔴 Enter Destination</span>
+            <input style={{ padding: 12, borderRadius: 8, border: '1px solid rgba(37,99,235,0.15)', background: 'rgba(37,99,235,0.06)', color: '#e0e7ff' }} value={destination} onChange={(e) => setDestination(e.target.value)} />
           </label>
           <div style={{ display: 'flex', gap: 8 }}>
-            <button type="button" style={{ padding: 12, background: '#7EB8A8', color: '#060D0D', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 600 }} onClick={handleSwap}>↕️ Swap</button>
-            <button type="button" style={{ padding: 12, background: '#00C9A7', color: '#060D0D', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 600 }} onClick={handleRoute}>Plan Safe Route</button>
+            <button type="button" style={{ padding: 12, background: '#60a5fa', color: '#060D0D', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 600 }} onClick={handleSwap}>↕️ Swap</button>
+            <button type="button" style={{ padding: 12, background: '#2563eb', color: '#ffffff', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 600 }} onClick={handleRoute}>Plan Safe Route</button>
           </div>
         </div>
       </div>
       <div style={{ height: '100%', width: '100%' }} ref={mapRef} />
-      <div style={{ position: 'absolute', bottom: 80, left: 20, right: 20, background:'rgba(0,201,167,0.06)', border:'1px solid rgba(0,201,167,0.15)', borderRadius:20, padding:18 }}>
+      <div style={{ position: 'absolute', bottom: 80, left: 20, right: 20, background:'rgba(37,99,235,0.06)', border:'1px solid rgba(37,99,235,0.15)', borderRadius:20, padding:18 }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: 16, marginBottom: 16 }}>
           <div style={{ textAlign: 'center' }}>
-            <p style={{ fontSize: 12, color: '#7EB8A8', margin: 0 }}>Distance</p>
-            <h3 style={{ fontSize: 18, color: '#E8FFF8', margin: 0 }}>{routeInfo.distance} km</h3>
+            <p style={{ fontSize: 12, color: '#60a5fa', margin: 0 }}>Distance</p>
+            <h3 style={{ fontSize: 18, color: '#e0e7ff', margin: 0 }}>{routeInfo.distance} km</h3>
           </div>
           <div style={{ textAlign: 'center' }}>
-            <p style={{ fontSize: 12, color: '#7EB8A8', margin: 0 }}>ETA</p>
-            <h3 style={{ fontSize: 18, color: '#E8FFF8', margin: 0 }}>{routeInfo.duration} min</h3>
+            <p style={{ fontSize: 12, color: '#60a5fa', margin: 0 }}>ETA</p>
+            <h3 style={{ fontSize: 18, color: '#e0e7ff', margin: 0 }}>{routeInfo.duration} min</h3>
           </div>
           <div style={{ textAlign: 'center' }}>
-            <p style={{ fontSize: 12, color: '#7EB8A8', margin: 0 }}>Hazards</p>
-            <h3 style={{ fontSize: 18, color: '#E8FFF8', margin: 0 }}>{routeInfo.hazards}</h3>
+            <p style={{ fontSize: 12, color: '#60a5fa', margin: 0 }}>Hazards</p>
+            <h3 style={{ fontSize: 18, color: '#e0e7ff', margin: 0 }}>{routeInfo.hazards}</h3>
           </div>
           <div style={{ textAlign: 'center' }}>
-            <p style={{ fontSize: 12, color: '#7EB8A8', margin: 0 }}>Safety</p>
-            <h3 style={{ fontSize: 18, color: '#E8FFF8', margin: 0 }}>{routeInfo.safetyScore}/100</h3>
+            <p style={{ fontSize: 12, color: '#60a5fa', margin: 0 }}>Safety</p>
+            <h3 style={{ fontSize: 18, color: '#e0e7ff', margin: 0 }}>{routeInfo.safetyScore}/100</h3>
           </div>
         </div>
-        <button type="button" style={{ width: '100%', padding: 16, background: '#00C9A7', color: '#060D0D', border: 'none', borderRadius: 12, cursor: 'pointer', fontWeight: 600, fontSize: 16 }}>Start Navigation</button>
+        <button type="button" style={{ width: '100%', padding: 16, background: '#2563eb', color: '#ffffff', border: 'none', borderRadius: 12, cursor: 'pointer', fontWeight: 600, fontSize: 16 }}>Start Navigation</button>
       </div>
     </main>
   );

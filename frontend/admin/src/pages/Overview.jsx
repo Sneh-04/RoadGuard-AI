@@ -4,7 +4,7 @@ import { AlertTriangle, CheckCircle, Clock, MapPin } from 'lucide-react';
 
 const statusColors = {
   pending: '#F59E0B',
-  solved: '#22C55E',
+  solved: '#2563eb',
   in_progress: '#3B82F6',
   ignored: '#EF4444',
 };
@@ -28,8 +28,8 @@ export default function Overview() {
       title: 'Solved',
       value: analytics.solved || 0,
       icon: CheckCircle,
-      color: 'text-green-600',
-      bg: 'bg-green-100',
+      color: 'text-blue-600',
+      bg: 'bg-blue-100',
     },
     {
       title: 'Pending',
@@ -63,7 +63,7 @@ export default function Overview() {
 
       <div className="rounded-[1.75rem] border border-white/10 bg-[#0f2f2f]/80 p-5 text-slate-100 shadow-sm">
         <div className="flex flex-wrap items-center gap-3">
-          <span className={`rounded-full px-3 py-1 text-xs ${socketStatus === 'connected' ? 'bg-emerald-500/15 text-emerald-200' : socketStatus === 'connecting' ? 'bg-amber-500/15 text-amber-200' : 'bg-red-500/15 text-red-200'}`}>
+          <span className={`rounded-full px-3 py-1 text-xs ${socketStatus === 'connected' ? 'bg-blue-500/15 text-blue-200' : socketStatus === 'connecting' ? 'bg-amber-500/15 text-amber-200' : 'bg-red-500/15 text-red-200'}`}>
             {socketStatus === 'connected' ? 'Live feed connected' : socketStatus === 'connecting' ? 'Connecting to live feed…' : 'Live feed offline'}
           </span>
           <span className="rounded-full bg-slate-900/60 px-3 py-1 text-xs text-slate-200">{liveStats.total || 0} hazards streamed</span>
@@ -182,7 +182,7 @@ export default function Overview() {
                     <span className={`px-2 py-1 rounded-full text-xs ${
                       area.count > 10 ? 'bg-red-100 text-red-800' :
                       area.count > 5 ? 'bg-yellow-100 text-yellow-800' :
-                      'bg-green-100 text-green-800'
+                      'bg-blue-100 text-blue-800'
                     }`}>
                       {area.count > 10 ? 'High' : area.count > 5 ? 'Medium' : 'Low'}
                     </span>

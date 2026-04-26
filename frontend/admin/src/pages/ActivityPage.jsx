@@ -19,7 +19,7 @@ export default function ActivityPage() {
   return (
     <div className="space-y-6 pb-28">
       <div className="rounded-[2rem] border border-white/10 bg-[#102f2f]/90 p-6 shadow-[0_35px_80px_rgba(20,184,166,0.14)] backdrop-blur-xl">
-        <p className="text-sm uppercase tracking-[0.3em] text-cyan-200/70">Activity Dashboard</p>
+        <p className="text-sm uppercase tracking-[0.3em] text-blue-200/70">Activity Dashboard</p>
         <h2 className="mt-3 text-3xl font-semibold text-slate-100">Your performance at a glance</h2>
         <p className="mt-2 text-sm text-slate-400">A quick summary of your road safety activity and community impact.</p>
       </div>

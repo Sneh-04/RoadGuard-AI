@@ -26,7 +26,7 @@ export default function ActivityPage() {
   return (
     <div className="space-y-6 pb-28">
       <div className="rounded-[2rem] border border-white/10 bg-[#102f2f]/90 p-6 shadow-[0_35px_80px_rgba(20,184,166,0.14)] backdrop-blur-xl">
-        <p className="text-sm uppercase tracking-[0.3em] text-cyan-200/70">Activity Dashboard</p>
+        <p className="text-sm uppercase tracking-[0.3em] text-blue-200/70">Activity Dashboard</p>
         <h2 className="mt-3 text-3xl font-semibold text-slate-100">Live hazard activity</h2>
         <p className="mt-2 text-sm text-slate-400">Monitor the stream of recent hazard reports coming through the network.</p>
         <div className="mt-5 inline-flex rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-100">
@@ -39,7 +39,7 @@ export default function ActivityPage() {
           <Card key={item.label} title={item.label} className="p-6">
             <div className="flex items-center justify-between gap-3">
               <p className="text-4xl font-semibold text-slate-100">{item.value}</p>
-              <span className="rounded-full bg-white/5 p-3 text-cyan-200">
+              <span className="rounded-full bg-white/5 p-3 text-blue-200">
                 <item.icon className="h-6 w-6" />
               </span>
             </div>

@@ -40,7 +40,7 @@ export default function Sidebar({ isAdmin, onAdminToggle }) {
       >
         {/* Logo */}
         <div className="p-6 border-b border-slate-700">
-          <h1 className="text-xl font-bold text-cyan-400">RoadGuard</h1>
+          <h1 className="text-xl font-bold text-blue-400">RoadGuard</h1>
           <p className="text-xs text-slate-400 mt-1">AI Road Safety</p>
         </div>
 
@@ -56,7 +56,7 @@ export default function Sidebar({ isAdmin, onAdminToggle }) {
                 onClick={() => setIsOpen(false)}
                 className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
                   active
-                    ? 'bg-cyan-600 text-white'
+                    ? 'bg-red-600 text-white'
                     : 'text-slate-300 hover:bg-slate-700'
                 }`}
               >

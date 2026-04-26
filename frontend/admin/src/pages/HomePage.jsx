@@ -25,11 +25,11 @@ export default function HomePage() {
       <header className="rounded-[2rem] border border-white/10 bg-[#102f2f]/90 p-6 shadow-[0_35px_80px_rgba(20,184,166,0.14)] backdrop-blur-xl">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <p className="text-sm uppercase tracking-[0.3em] text-cyan-200/70">Road Safety Assistant</p>
+            <p className="text-sm uppercase tracking-[0.3em] text-blue-200/70">Road Safety Assistant</p>
             <h1 className="mt-3 text-3xl font-semibold text-slate-100 sm:text-4xl">Good Evening, Snehalatha 👋</h1>
             <p className="mt-2 max-w-xl text-sm text-slate-400 sm:text-base">Markapur, premium road insights for your next ride.</p>
           </div>
-          <div className="inline-flex h-14 w-14 items-center justify-center rounded-[1.5rem] bg-white/5 text-cyan-200 shadow-[0_20px_60px_rgba(20,184,166,0.18)]">
+          <div className="inline-flex h-14 w-14 items-center justify-center rounded-[1.5rem] bg-white/5 text-blue-200 shadow-[0_20px_60px_rgba(37,99,235,0.18)]">
             <CloudRain className="h-7 w-7" />
           </div>
         </div>
@@ -46,7 +46,7 @@ export default function HomePage() {
                 <p>Wind 11 km/h</p>
               </div>
             </div>
-            <div className="flex h-20 w-20 items-center justify-center rounded-[1.75rem] bg-cyan-400/10 text-cyan-200">
+            <div className="flex h-20 w-20 items-center justify-center rounded-[1.75rem] bg-blue-500/10 text-blue-200">
               <CloudRain className="h-10 w-10" />
             </div>
           </div>
@@ -72,7 +72,7 @@ export default function HomePage() {
           <div className="flex items-center justify-between rounded-[1.75rem] border border-white/10 bg-white/5 px-4 py-4 text-slate-400">
             <div>
               <p className="text-sm uppercase tracking-[0.2em] text-slate-400">Status</p>
-              <p className={`mt-2 font-semibold ${socketStatus === 'connected' ? 'text-emerald-300' : 'text-amber-300'}`}>
+              <p className={`mt-2 font-semibold ${socketStatus === 'connected' ? 'text-blue-300' : 'text-amber-300'}`}>
                 {liveCardLabel}
               </p>
             </div>

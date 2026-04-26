@@ -7,7 +7,7 @@ export default function ToggleSwitch({ label, checked, onChange }) {
       <button
         type="button"
         onClick={() => onChange(!checked)}
-        className={`relative inline-flex h-9 w-16 items-center rounded-full transition duration-300 ${checked ? 'bg-cyan-400/80' : 'bg-slate-700/80'}`}
+        className={`relative inline-flex h-9 w-16 items-center rounded-full transition duration-300 ${checked ? 'bg-primary' : 'bg-slate-700/80'}`}
         aria-pressed={checked}
       >
         <span className={`inline-block h-7 w-7 transform rounded-full bg-white shadow-lg transition duration-300 ${checked ? 'translate-x-7' : 'translate-x-1'}`} />

@@ -66,23 +66,23 @@ export default function AuthScreen({ onSuccess }) {
   return (
     <main style={{ height: '100vh', width: '100vw', background: '#060D0D', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
       <div style={{ width: '100%', maxWidth: 400 }}>
-        <div style={{ background:'rgba(0,201,167,0.06)', border:'1px solid rgba(0,201,167,0.15)', borderRadius:20, padding:24 }}>
+        <div style={{ background:'rgba(37,99,235,0.06)', border:'1px solid rgba(37,99,235,0.15)', borderRadius:20, padding:24 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24 }}>
             <div>
-              <p style={{ fontSize: 14, color: '#7EB8A8', margin: 0 }}>RoadGuard</p>
-              <h1 style={{ fontSize: 24, color: '#E8FFF8', margin: '4px 0 0 0' }}>{mode === 'register' ? 'Create your account' : 'Welcome back'}</h1>
+              <p style={{ fontSize: 14, color: '#60a5fa', margin: 0 }}>RoadGuard</p>
+              <h1 style={{ fontSize: 24, color: '#e0e7ff', margin: '4px 0 0 0' }}>{mode === 'register' ? 'Create your account' : 'Welcome back'}</h1>
             </div>
             <div style={{ display: 'flex', gap: 8 }}>
               <button
                 type="button"
-                style={{ padding: '8px 16px', background: mode === 'register' ? '#00C9A7' : 'rgba(0,201,167,0.06)', color: mode === 'register' ? '#060D0D' : '#7EB8A8', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 600 }}
+                style={{ padding: '8px 16px', background: mode === 'register' ? '#2563eb' : 'rgba(37,99,235,0.06)', color: mode === 'register' ? '#ffffff' : '#60a5fa', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 600 }}
                 onClick={() => setMode('register')}
               >
                 Register
               </button>
               <button
                 type="button"
-                style={{ padding: '8px 16px', background: mode === 'login' ? '#00C9A7' : 'rgba(0,201,167,0.06)', color: mode === 'login' ? '#060D0D' : '#7EB8A8', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 600 }}
+                style={{ padding: '8px 16px', background: mode === 'login' ? '#2563eb' : 'rgba(37,99,235,0.06)', color: mode === 'login' ? '#ffffff' : '#60a5fa', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 600 }}
                 onClick={() => setMode('login')}
               >
                 Login
@@ -93,65 +93,65 @@ export default function AuthScreen({ onSuccess }) {
           {mode === 'register' ? (
             <form style={{ display: 'flex', flexDirection: 'column', gap: 16 }} onSubmit={handleRegister}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                <label style={{ fontSize: 14, color: '#E8FFF8', fontWeight: 600 }}>Full Name</label>
-                <input style={{ padding: 12, borderRadius: 8, border: '1px solid rgba(0,201,167,0.15)', background: 'rgba(0,201,167,0.06)', color: '#E8FFF8' }} value={form.fullName} onChange={(e) => updateField('fullName', e.target.value)} placeholder="Snehalatha Reddy" />
+                <label style={{ fontSize: 14, color: '#e0e7ff', fontWeight: 600 }}>Full Name</label>
+                <input style={{ padding: 12, borderRadius: 8, border: '1px solid rgba(37,99,235,0.15)', background: 'rgba(37,99,235,0.06)', color: '#e0e7ff' }} value={form.fullName} onChange={(e) => updateField('fullName', e.target.value)} placeholder="Snehalatha Reddy" />
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                <label style={{ fontSize: 14, color: '#E8FFF8', fontWeight: 600 }}>Email Address</label>
-                <input style={{ padding: 12, borderRadius: 8, border: '1px solid rgba(0,201,167,0.15)', background: 'rgba(0,201,167,0.06)', color: '#E8FFF8' }} value={form.email} onChange={(e) => updateField('email', e.target.value)} type="email" placeholder="hello@roadguard.ai" />
+                <label style={{ fontSize: 14, color: '#e0e7ff', fontWeight: 600 }}>Email Address</label>
+                <input style={{ padding: 12, borderRadius: 8, border: '1px solid rgba(37,99,235,0.15)', background: 'rgba(37,99,235,0.06)', color: '#e0e7ff' }} value={form.email} onChange={(e) => updateField('email', e.target.value)} type="email" placeholder="hello@roadguard.ai" />
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                <label style={{ fontSize: 14, color: '#E8FFF8', fontWeight: 600 }}>Phone Number</label>
-                <input style={{ padding: 12, borderRadius: 8, border: '1px solid rgba(0,201,167,0.15)', background: 'rgba(0,201,167,0.06)', color: '#E8FFF8' }} value={form.phone} onChange={(e) => updateField('phone', e.target.value)} type="tel" placeholder="+91 98765 43210" />
+                <label style={{ fontSize: 14, color: '#e0e7ff', fontWeight: 600 }}>Phone Number</label>
+                <input style={{ padding: 12, borderRadius: 8, border: '1px solid rgba(37,99,235,0.15)', background: 'rgba(37,99,235,0.06)', color: '#e0e7ff' }} value={form.phone} onChange={(e) => updateField('phone', e.target.value)} type="tel" placeholder="+91 98765 43210" />
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                <label style={{ fontSize: 14, color: '#E8FFF8', fontWeight: 600 }}>City / Region</label>
-                <input style={{ padding: 12, borderRadius: 8, border: '1px solid rgba(0,201,167,0.15)', background: 'rgba(0,201,167,0.06)', color: '#E8FFF8' }} value={form.city} onChange={(e) => updateField('city', e.target.value)} placeholder="Chennai" />
+                <label style={{ fontSize: 14, color: '#e0e7ff', fontWeight: 600 }}>City / Region</label>
+                <input style={{ padding: 12, borderRadius: 8, border: '1px solid rgba(37,99,235,0.15)', background: 'rgba(37,99,235,0.06)', color: '#e0e7ff' }} value={form.city} onChange={(e) => updateField('city', e.target.value)} placeholder="Chennai" />
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                <label style={{ fontSize: 14, color: '#E8FFF8', fontWeight: 600 }}>Vehicle Type</label>
-                <select style={{ padding: 12, borderRadius: 8, border: '1px solid rgba(0,201,167,0.15)', background: 'rgba(0,201,167,0.06)', color: '#E8FFF8' }} value={form.vehicle} onChange={(e) => updateField('vehicle', e.target.value)}>
+                <label style={{ fontSize: 14, color: '#e0e7ff', fontWeight: 600 }}>Vehicle Type</label>
+                <select style={{ padding: 12, borderRadius: 8, border: '1px solid rgba(37,99,235,0.15)', background: 'rgba(37,99,235,0.06)', color: '#e0e7ff' }} value={form.vehicle} onChange={(e) => updateField('vehicle', e.target.value)}>
                   {vehicleOptions.map((option) => (
                     <option key={option} value={option}>{option}</option>
                   ))}
                 </select>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                <label style={{ fontSize: 14, color: '#E8FFF8', fontWeight: 600 }}>Profile Photo</label>
-                <input style={{ padding: 12, borderRadius: 8, border: '1px solid rgba(0,201,167,0.15)', background: 'rgba(0,201,167,0.06)', color: '#E8FFF8' }} type="file" accept="image/*" onChange={handleAvatar} />
+                <label style={{ fontSize: 14, color: '#e0e7ff', fontWeight: 600 }}>Profile Photo</label>
+                <input style={{ padding: 12, borderRadius: 8, border: '1px solid rgba(37,99,235,0.15)', background: 'rgba(37,99,235,0.06)', color: '#e0e7ff' }} type="file" accept="image/*" onChange={handleAvatar} />
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                <label style={{ fontSize: 14, color: '#E8FFF8', fontWeight: 600 }}>Password</label>
-                <input style={{ padding: 12, borderRadius: 8, border: '1px solid rgba(0,201,167,0.15)', background: 'rgba(0,201,167,0.06)', color: '#E8FFF8' }} value={form.password} onChange={(e) => updateField('password', e.target.value)} type="password" placeholder="Create a strong password" />
+                <label style={{ fontSize: 14, color: '#e0e7ff', fontWeight: 600 }}>Password</label>
+                <input style={{ padding: 12, borderRadius: 8, border: '1px solid rgba(37,99,235,0.15)', background: 'rgba(37,99,235,0.06)', color: '#e0e7ff' }} value={form.password} onChange={(e) => updateField('password', e.target.value)} type="password" placeholder="Create a strong password" />
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                <label style={{ fontSize: 14, color: '#E8FFF8', fontWeight: 600 }}>Confirm Password</label>
-                <input style={{ padding: 12, borderRadius: 8, border: '1px solid rgba(0,201,167,0.15)', background: 'rgba(0,201,167,0.06)', color: '#E8FFF8' }} value={form.confirmPassword} onChange={(e) => updateField('confirmPassword', e.target.value)} type="password" placeholder="Retype password" />
+                <label style={{ fontSize: 14, color: '#e0e7ff', fontWeight: 600 }}>Confirm Password</label>
+                <input style={{ padding: 12, borderRadius: 8, border: '1px solid rgba(37,99,235,0.15)', background: 'rgba(37,99,235,0.06)', color: '#e0e7ff' }} value={form.confirmPassword} onChange={(e) => updateField('confirmPassword', e.target.value)} type="password" placeholder="Retype password" />
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <label style={{ fontSize: 14, color: '#7EB8A8', display: 'flex', alignItems: 'center', gap: 8 }}>
+                <label style={{ fontSize: 14, color: '#60a5fa', display: 'flex', alignItems: 'center', gap: 8 }}>
                   <input type="checkbox" checked={form.terms} onChange={(e) => updateField('terms', e.target.checked)} />
                   I agree to the Terms & Conditions
                 </label>
               </div>
               {error && <p style={{ color: '#FF5F6D', fontSize: 14, margin: 0 }}>{error}</p>}
-              <button type="submit" style={{ padding: 16, background: '#00C9A7', color: '#060D0D', border: 'none', borderRadius: 12, cursor: 'pointer', fontWeight: 600, fontSize: 16 }}>Create Account</button>
+              <button type="submit" style={{ padding: 16, background: '#2563eb', color: '#ffffff', border: 'none', borderRadius: 12, cursor: 'pointer', fontWeight: 600, fontSize: 16 }}>Create Account</button>
             </form>
           ) : (
             <form style={{ display: 'flex', flexDirection: 'column', gap: 16 }} onSubmit={handleLogin}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                <label style={{ fontSize: 14, color: '#E8FFF8', fontWeight: 600 }}>Email Address</label>
-                <input style={{ padding: 12, borderRadius: 8, border: '1px solid rgba(0,201,167,0.15)', background: 'rgba(0,201,167,0.06)', color: '#E8FFF8' }} value={loginForm.email} onChange={(e) => setLoginForm((prev) => ({ ...prev, email: e.target.value }))} type="email" placeholder="hello@roadguard.ai" />
+                <label style={{ fontSize: 14, color: '#e0e7ff', fontWeight: 600 }}>Email Address</label>
+                <input style={{ padding: 12, borderRadius: 8, border: '1px solid rgba(37,99,235,0.15)', background: 'rgba(37,99,235,0.06)', color: '#e0e7ff' }} value={loginForm.email} onChange={(e) => setLoginForm((prev) => ({ ...prev, email: e.target.value }))} type="email" placeholder="hello@roadguard.ai" />
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                <label style={{ fontSize: 14, color: '#E8FFF8', fontWeight: 600 }}>Password</label>
-                <input style={{ padding: 12, borderRadius: 8, border: '1px solid rgba(0,201,167,0.15)', background: 'rgba(0,201,167,0.06)', color: '#E8FFF8' }} value={loginForm.password} onChange={(e) => setLoginForm((prev) => ({ ...prev, password: e.target.value }))} type="password" placeholder="Enter your password" />
+                <label style={{ fontSize: 14, color: '#e0e7ff', fontWeight: 600 }}>Password</label>
+                <input style={{ padding: 12, borderRadius: 8, border: '1px solid rgba(37,99,235,0.15)', background: 'rgba(37,99,235,0.06)', color: '#e0e7ff' }} value={loginForm.password} onChange={(e) => setLoginForm((prev) => ({ ...prev, password: e.target.value }))} type="password" placeholder="Enter your password" />
               </div>
-              <button type="button" style={{ background: 'none', border: 'none', color: '#00C9A7', cursor: 'pointer', fontSize: 14, alignSelf: 'flex-start' }}>Forgot Password?</button>
+              <button type="button" style={{ background: 'none', border: 'none', color: '#2563eb', cursor: 'pointer', fontSize: 14, alignSelf: 'flex-start' }}>Forgot Password?</button>
               {error && <p style={{ color: '#FF5F6D', fontSize: 14, margin: 0 }}>{error}</p>}
-              <button type="submit" style={{ padding: 16, background: '#00C9A7', color: '#060D0D', border: 'none', borderRadius: 12, cursor: 'pointer', fontWeight: 600, fontSize: 16 }}>Login</button>
-              <div style={{ textAlign: 'center', color: '#7EB8A8', fontSize: 14, margin: '16px 0', position: 'relative' }}>or</div>
-              <button type="button" style={{ padding: 12, background: '#7EB8A8', color: '#060D0D', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 600 }}>Continue with Google</button>
+              <button type="submit" style={{ padding: 16, background: '#2563eb', color: '#ffffff', border: 'none', borderRadius: 12, cursor: 'pointer', fontWeight: 600, fontSize: 16 }}>Login</button>
+              <div style={{ textAlign: 'center', color: '#60a5fa', fontSize: 14, margin: '16px 0', position: 'relative' }}>or</div>
+              <button type="button" style={{ padding: 12, background: '#2563eb', color: '#ffffff', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 600 }}>Continue with Google</button>
             </form>
           )}
         </div>

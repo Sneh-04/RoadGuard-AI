@@ -99,7 +99,7 @@ export default function AdminHazards() {
                 </span>
                 <span className={`text-xs font-semibold ${
                   hazard.status === 'ACTIVE'
-                    ? 'text-cyan-400'
+                    ? 'text-blue-400'
                     : hazard.status === 'SOLVED'
                     ? 'text-green-400'
                     : 'text-gray-400'
@@ -110,7 +110,7 @@ export default function AdminHazards() {
 
               {/* Details */}
               <div className="space-y-1 text-sm">
-                <p className="text-slate-300">ID: <span className="text-cyan-400">#{hazard.id}</span></p>
+                <p className="text-slate-300">ID: <span className="text-blue-400">#{hazard.id}</span></p>
                 <p className="text-slate-300">
                   Location: <span className="text-slate-400">{hazard.latitude?.toFixed(4) || 'N/A'}, {hazard.longitude?.toFixed(4) || 'N/A'}</span>
                 </p>
@@ -123,10 +123,10 @@ export default function AdminHazards() {
                   disabled={actionLoading[hazard.id] || hazard.status === 'SOLVED'}
                   className={`flex-1 px-3 py-2 rounded-lg text-sm font-semibold flex items-center justify-center gap-2 transition-colors ${
                     actionLoading[hazard.id]
-                      ? 'bg-emerald-600/50 text-emerald-200'
+                      ? 'bg-blue-600/50 text-blue-200'
                       : hazard.status === 'SOLVED'
                       ? 'bg-slate-600 text-slate-400 cursor-not-allowed'
-                      : 'bg-emerald-600 text-white hover:bg-emerald-700'
+                      : 'bg-blue-600 text-white hover:bg-blue-700'
                   }`}
                 >
                   {actionLoading[hazard.id] ? (
