@@ -79,7 +79,7 @@ export default function AdminDashboard({ onLogout }) {
   };
 
   const renderOverview = () => (
-    <div style={{ padding: 20, background: '#060D0D' }}>
+    <div style={{ padding: 20, background: '#021c1a' }}>
       {/* 🟢 LIVE SENSOR STREAM INDICATOR */}
       <div style={{ 
         background: 'rgba(37,99,235,0.06)', 
@@ -92,8 +92,8 @@ export default function AdminDashboard({ onLogout }) {
         marginBottom: 20
       }}>
         <div>
-          <p style={{ fontSize: 14, color: '#60a5fa', margin: 0 }}>System Status</p>
-          <h2 style={{ fontSize: 18, color: '#e0e7ff', margin: 0 }}>Real-time monitoring</h2>
+          <p style={{ fontSize: 14, color: '#7dd3c7', margin: 0 }}>System Status</p>
+          <h2 style={{ fontSize: 18, color: '#e6fffa', margin: 0 }}>Real-time monitoring</h2>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           {/* Blinking indicator */}
@@ -130,41 +130,41 @@ export default function AdminDashboard({ onLogout }) {
         gridTemplateColumns: '1fr 1fr 1fr'
       }}>
         <div>
-          <p style={{ fontSize: 12, color: '#60a5fa', margin: '0 0 4px 0' }}>Live Detections</p>
-          <p style={{ fontSize: 20, fontWeight: 700, color: '#e0e7ff', margin: 0 }}>{liveHazardCount}</p>
+          <p style={{ fontSize: 12, color: '#7dd3c7', margin: '0 0 4px 0' }}>Live Detections</p>
+          <p style={{ fontSize: 20, fontWeight: 700, color: '#e6fffa', margin: 0 }}>{liveHazardCount}</p>
         </div>
         <div>
-          <p style={{ fontSize: 12, color: '#60a5fa', margin: '0 0 4px 0' }}>Last Detection</p>
-          <p style={{ fontSize: 14, color: '#e0e7ff', margin: 0 }}>
+          <p style={{ fontSize: 12, color: '#7dd3c7', margin: '0 0 4px 0' }}>Last Detection</p>
+          <p style={{ fontSize: 14, color: '#e6fffa', margin: 0 }}>
             {lastHazardTime ? new Date(lastHazardTime).toLocaleTimeString() : 'Waiting...'}
           </p>
         </div>
         <div>
-          <p style={{ fontSize: 12, color: '#60a5fa', margin: '0 0 4px 0' }}>Total Reports</p>
-          <p style={{ fontSize: 20, fontWeight: 700, color: '#e0e7ff', margin: 0 }}>{reports.length}</p>
+          <p style={{ fontSize: 12, color: '#7dd3c7', margin: '0 0 4px 0' }}>Total Reports</p>
+          <p style={{ fontSize: 20, fontWeight: 700, color: '#e6fffa', margin: 0 }}>{reports.length}</p>
         </div>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 20 }}>
-        <div style={{ background:'rgba(37,99,235,0.06)', border:'1px solid rgba(37,99,235,0.15)', borderRadius:20, padding:18 }}>
-          <p style={{ fontSize: 14, color: '#60a5fa', margin: 0 }}>Total Reports</p>
-          <p style={{ fontSize: 24, fontWeight: 700, color: '#e0e7ff', margin: 0 }}>{reports.length}</p>
-          <p style={{ fontSize: 12, color: '#60a5fa', margin: '4px 0 0 0' }}>↑ {liveHazardCount} live this session</p>
+        <div style={{ background:'rgba(0,201,167,0.06)', border:'1px solid rgba(0,201,167,0.15)', borderRadius:20, padding:18 }}>
+          <p style={{ fontSize: 14, color: '#7dd3c7', margin: 0 }}>Total Reports</p>
+          <p style={{ fontSize: 24, fontWeight: 700, color: '#e6fffa', margin: 0 }}>{reports.length}</p>
+          <p style={{ fontSize: 12, color: '#7dd3c7', margin: '4px 0 0 0' }}>↑ {liveHazardCount} live this session</p>
         </div>
-        <div style={{ background:'rgba(37,99,235,0.06)', border:'1px solid rgba(37,99,235,0.15)', borderRadius:20, padding:18 }}>
-          <p style={{ fontSize: 14, color: '#60a5fa', margin: 0 }}>Pending</p>
-          <p style={{ fontSize: 24, fontWeight: 700, color: '#e0e7ff', margin: 0 }}>{reports.filter(r => r.status === 'Pending').length}</p>
-          <p style={{ fontSize: 12, color: '#60a5fa', margin: '4px 0 0 0' }}>⚠️ needs attention</p>
+        <div style={{ background:'rgba(0,201,167,0.06)', border:'1px solid rgba(0,201,167,0.15)', borderRadius:20, padding:18 }}>
+          <p style={{ fontSize: 14, color: '#7dd3c7', margin: 0 }}>Pending</p>
+          <p style={{ fontSize: 24, fontWeight: 700, color: '#e6fffa', margin: 0 }}>{reports.filter(r => r.status === 'Pending').length}</p>
+          <p style={{ fontSize: 12, color: '#7dd3c7', margin: '4px 0 0 0' }}>⚠️ needs attention</p>
         </div>
-        <div style={{ background:'rgba(37,99,235,0.06)', border:'1px solid rgba(37,99,235,0.15)', borderRadius:20, padding:18 }}>
-          <p style={{ fontSize: 14, color: '#60a5fa', margin: 0 }}>Resolved</p>
-          <p style={{ fontSize: 24, fontWeight: 700, color: '#e0e7ff', margin: 0 }}>{reports.filter(r => r.status === 'Resolved').length}</p>
-          <p style={{ fontSize: 12, color: '#60a5fa', margin: '4px 0 0 0' }}>✅ this session</p>
+        <div style={{ background:'rgba(0,201,167,0.06)', border:'1px solid rgba(0,201,167,0.15)', borderRadius:20, padding:18 }}>
+          <p style={{ fontSize: 14, color: '#7dd3c7', margin: 0 }}>Resolved</p>
+          <p style={{ fontSize: 24, fontWeight: 700, color: '#e6fffa', margin: 0 }}>{reports.filter(r => r.status === 'Resolved').length}</p>
+          <p style={{ fontSize: 12, color: '#7dd3c7', margin: '4px 0 0 0' }}>✅ this session</p>
         </div>
-        <div style={{ background:'rgba(37,99,235,0.06)', border:'1px solid rgba(37,99,235,0.15)', borderRadius:20, padding:18 }}>
-          <p style={{ fontSize: 14, color: '#60a5fa', margin: 0 }}>Live Users</p>
-          <p style={{ fontSize: 24, fontWeight: 700, color: '#e0e7ff', margin: 0 }}>1,240</p>
-          <p style={{ fontSize: 12, color: '#60a5fa', margin: '4px 0 0 0' }}>Active community</p>
+        <div style={{ background:'rgba(0,201,167,0.06)', border:'1px solid rgba(0,201,167,0.15)', borderRadius:20, padding:18 }}>
+          <p style={{ fontSize: 14, color: '#7dd3c7', margin: 0 }}>Live Users</p>
+          <p style={{ fontSize: 24, fontWeight: 700, color: '#e6fffa', margin: 0 }}>1,240</p>
+          <p style={{ fontSize: 12, color: '#7dd3c7', margin: '4px 0 0 0' }}>Active community</p>
         </div>
       </div>
 

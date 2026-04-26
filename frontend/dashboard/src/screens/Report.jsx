@@ -108,12 +108,12 @@ export default function Report() {
   }, [location]);
 
   return (
-    <main style={{ padding: 20, background: '#060D0D' }}>
+    <main style={{ padding: 20, background: '#021c1a' }}>
       <div style={{ background:'rgba(0,201,167,0.06)', border:'1px solid rgba(0,201,167,0.15)', borderRadius:20, padding:18 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
           <div>
-            <p style={{ fontSize: 14, color: '#7EB8A8', margin: 0 }}>Report Hazard</p>
-            <h2 style={{ fontSize: 18, color: '#E8FFF8', margin: 0 }}>Help protect the next driver</h2>
+            <p style={{ fontSize: 14, color: '#7dd3c7', margin: 0 }}>Report Hazard</p>
+            <h2 style={{ fontSize: 18, color: '#e6fffa', margin: 0 }}>Help protect the next driver</h2>
           </div>
         </div>
 
@@ -123,15 +123,15 @@ export default function Report() {
           ) : (
             <div style={{ textAlign: 'center', padding: 40 }}>
               <span style={{ fontSize: 48, display: 'block', marginBottom: 16 }}>📸</span>
-              <p style={{ color: '#7EB8A8' }}>Take a photo or upload from gallery to analyze the hazard.</p>
+              <p style={{ color: '#7dd3c7' }}>Take a photo or upload from gallery to analyze the hazard.</p>
             </div>
           )}
           <div style={{ display: 'flex', gap: 12, marginTop: 16 }}>
-            <label style={{ flex: 1, padding: 12, background: '#00C9A7', color: '#060D0D', borderRadius: 12, textAlign: 'center', cursor: 'pointer', fontWeight: 600 }}>
+            <label style={{ flex: 1, padding: 12, background: '#00c9a7', color: '#021c1a', borderRadius: 12, textAlign: 'center', cursor: 'pointer', fontWeight: 600 }}>
               Take Photo
               <input type="file" accept="image/*" capture="environment" onChange={handleImage} hidden />
             </label>
-            <label style={{ flex: 1, padding: 12, background: '#7EB8A8', color: '#060D0D', borderRadius: 12, textAlign: 'center', cursor: 'pointer', fontWeight: 600 }}>
+            <label style={{ flex: 1, padding: 12, background: '#00b89a', color: '#021c1a', borderRadius: 12, textAlign: 'center', cursor: 'pointer', fontWeight: 600 }}>
               Upload from Gallery
               <input type="file" accept="image/*" onChange={handleImage} hidden />
             </label>
@@ -140,18 +140,18 @@ export default function Report() {
 
         <form style={{ display: 'flex', flexDirection: 'column', gap: 16 }} onSubmit={handleSubmit}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            <label style={{ fontSize: 14, color: '#E8FFF8', fontWeight: 600 }}>Hazard Type</label>
-            <select style={{ padding: 12, borderRadius: 8, border: '1px solid rgba(0,201,167,0.15)', background: 'rgba(0,201,167,0.06)', color: '#E8FFF8' }} value={type} onChange={(e) => setType(e.target.value)}>
+            <label style={{ fontSize: 14, color: '#e6fffa', fontWeight: 600 }}>Hazard Type</label>
+            <select style={{ padding: 12, borderRadius: 8, border: '1px solid rgba(0,201,167,0.15)', background: 'rgba(0,201,167,0.06)', color: '#e6fffa' }} value={type} onChange={(e) => setType(e.target.value)}>
               {hazardTypes.map((option) => (
                 <option key={option} value={option}>{option}</option>
               ))}
             </select>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            <label style={{ fontSize: 14, color: '#E8FFF8', fontWeight: 600 }}>Severity</label>
+            <label style={{ fontSize: 14, color: '#e6fffa', fontWeight: 600 }}>Severity</label>
             <div style={{ display: 'flex', gap: 8 }}>
               {severityLevels.map((level) => (
-                <label key={level} style={{ padding: '8px 16px', borderRadius: 20, background: severity === level ? '#00C9A7' : 'rgba(0,201,167,0.06)', color: severity === level ? '#060D0D' : '#7EB8A8', cursor: 'pointer', border: '1px solid rgba(0,201,167,0.15)' }}>
+                <label key={level} style={{ padding: '8px 16px', borderRadius: 20, background: severity === level ? '#00c9a7' : 'rgba(0,201,167,0.06)', color: severity === level ? '#021c1a' : '#7dd3c7', cursor: 'pointer', border: '1px solid rgba(0,201,167,0.15)' }}>
                   <input type="radio" name="severity" value={level} checked={severity === level} onChange={() => setSeverity(level)} hidden />
                   {level}
                 </label>
@@ -159,15 +159,15 @@ export default function Report() {
             </div>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            <label style={{ fontSize: 14, color: '#E8FFF8', fontWeight: 600 }}>Description</label>
-            <textarea style={{ padding: 12, borderRadius: 8, border: '1px solid rgba(0,201,167,0.15)', background: 'rgba(0,201,167,0.06)', color: '#E8FFF8', minHeight: 80 }} value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Add more context for the community." />
+            <label style={{ fontSize: 14, color: '#e6fffa', fontWeight: 600 }}>Description</label>
+            <textarea style={{ padding: 12, borderRadius: 8, border: '1px solid rgba(0,201,167,0.15)', background: 'rgba(0,201,167,0.06)', color: '#e6fffa', minHeight: 80 }} value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Add more context for the community." />
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            <label style={{ fontSize: 14, color: '#E8FFF8', fontWeight: 600 }}>Location</label>
-            <input style={{ padding: 12, borderRadius: 8, border: '1px solid rgba(0,201,167,0.15)', background: 'rgba(0,201,167,0.06)', color: '#E8FFF8' }} value={locationLabel} readOnly />
+            <label style={{ fontSize: 14, color: '#e6fffa', fontWeight: 600 }}>Location</label>
+            <input style={{ padding: 12, borderRadius: 8, border: '1px solid rgba(0,201,167,0.15)', background: 'rgba(0,201,167,0.06)', color: '#e6fffa' }} value={locationLabel} readOnly />
           </div>
-          <button type="button" style={{ padding: 12, background: '#7EB8A8', color: '#060D0D', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 600 }} onClick={handleAnalyze} disabled={!preview || loading}>
-            {loading ? 'Analyzing…' : '🤖 Analyze with AI'}
+          <button type="button" style={{ padding: 12, background: '#00c9a7', color: '#021c1a', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 600 }} onClick={handleAnalyze} disabled={!preview || loading}>
+            {loading ? 'Analyzing…' : '🤖 Analyze with AI'}}
           </button>
 
           {analyzeStatus && (

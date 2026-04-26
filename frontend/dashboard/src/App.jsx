@@ -124,7 +124,20 @@ case 'profile': return <Suspense fallback={<div/>}><Profile /></Suspense>;
 default: return <Suspense fallback={<div/>}><Home /></Suspense>;
 }
 };return (
-<div style={{ height: '100dvh', display: 'flex', flexDirection: 'column', overflow: 'hidden', background: '#060D0D' }}>
+<div style={{ height: '100dvh', display: 'flex', flexDirection: 'column', overflow: 'hidden', background: '#021c1a' }}>
+{/* Visual Identifier - Temporary for verification */}
+<div style={{ 
+  background: '#062f2a', 
+  color: '#00c9a7', 
+  padding: '6px 12px', 
+  fontSize: '12px', 
+  fontWeight: 'bold', 
+  textAlign: 'center', 
+  borderBottom: '2px solid #00c9a7',
+  fontFamily: 'monospace'
+}}>
+  ✓ RUNNING: Dashboard Frontend on PORT 5176
+</div>
 <div style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', WebkitOverflowScrolling: 'touch', paddingBottom: 80 }}>{renderScreen()}</div>
 <BottomNav active={activeTab} onChange={setActiveTab} />
 {showToast && <Toast message={showToast} onClose={() => setShowToast(null)} />}

@@ -5,10 +5,10 @@ function RoadGuardLogo({ size = 80 }) {
     <div style={{
       width: size, height: size,
       borderRadius: size * 0.28,
-      background: 'linear-gradient(135deg, #2563eb, #3b82f6)',
+      background: 'linear-gradient(135deg, #00c9a7, #00b89a)',
       display: 'flex', alignItems: 'center',
       justifyContent: 'center',
-      boxShadow: '0 8px 32px rgba(37,99,235,0.35)',
+      boxShadow: '0 8px 32px rgba(0,201,167,0.35)',
       flexShrink: 0
     }}>
       <svg width={size*0.6} height={size*0.6}
@@ -49,7 +49,7 @@ export default function SplashScreen({ onComplete }) {
   return (
     <div style={{
       height: '100vh', width: '100vw',
-      background: '#060D0D',
+      background: '#021c1a',
       display: 'flex', flexDirection: 'column',
       alignItems: 'center', justifyContent: 'center',
       gap: '20px',
@@ -60,11 +60,11 @@ export default function SplashScreen({ onComplete }) {
       <div style={{ textAlign: 'center' }}>
         <h1 style={{
           fontSize: '34px', fontWeight: '800',
-          color: '#e0e7ff', letterSpacing: '-1px',
+          color: '#e6fffa', letterSpacing: '-1px',
           margin: 0
         }}>RoadGuard</h1>
         <p style={{
-          fontSize: '14px', color: '#60a5fa',
+          fontSize: '14px', color: '#7dd3c7',
           marginTop: '8px'
         }}>Intelligent Road Safety Platform</p>
       </div>
@@ -74,7 +74,7 @@ export default function SplashScreen({ onComplete }) {
           <div key={i} style={{
             width: '8px', height: '8px',
             borderRadius: '50%',
-            background: '#2563eb',
+            background: '#00c9a7',
             animation: `pulse 1.2s ease-in-out ${i*0.2}s infinite`
           }}/>
         ))}

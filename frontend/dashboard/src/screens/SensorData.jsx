@@ -59,11 +59,11 @@ export default function SensorData() {
   const communityImpact = stats.helpedUsers || 0;
 
   return (
-    <main style={{ padding: 20, background: '#060D0D' }}>
+    <main style={{ padding: 20, background: '#021c1a' }}>
       {/* 🟢 LIVE SENSOR STREAM INDICATOR */}
       <div style={{ 
-        background: 'rgba(37,99,235,0.06)', 
-        border: '1px solid rgba(37,99,235,0.15)', 
+        background: 'rgba(0,201,167,0.06)', 
+        border: '1px solid rgba(0,201,167,0.15)', 
         borderRadius: 20, 
         padding: 18, 
         display: 'flex', 
@@ -73,8 +73,8 @@ export default function SensorData() {
         position: 'relative'
       }}>
         <div>
-          <p style={{ fontSize: 14, color: '#60a5fa', margin: 0 }}>My Activity</p>
-          <h2 style={{ fontSize: 18, color: '#e0e7ff', margin: 0 }}>Your road safety journey</h2>
+          <p style={{ fontSize: 14, color: '#7dd3c7', margin: 0 }}>My Activity</p>
+          <h2 style={{ fontSize: 18, color: '#e6fffa', margin: 0 }}>Your road safety journey</h2>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           {/* Blinking indicator */}
@@ -111,12 +111,12 @@ export default function SensorData() {
         gridTemplateColumns: '1fr 1fr'
       }}>
         <div>
-          <p style={{ fontSize: 12, color: '#60a5fa', margin: '0 0 4px 0' }}>Hazards Detected (Live)</p>
-          <p style={{ fontSize: 20, fontWeight: 700, color: '#e0e7ff', margin: 0 }}>{hazardCount}</p>
+          <p style={{ fontSize: 12, color: '#7dd3c7', margin: '0 0 4px 0' }}>Hazards Detected (Live)</p>
+          <p style={{ fontSize: 20, fontWeight: 700, color: '#e6fffa', margin: 0 }}>{hazardCount}</p>
         </div>
         <div>
-          <p style={{ fontSize: 12, color: '#60a5fa', margin: '0 0 4px 0' }}>Last Detection</p>
-          <p style={{ fontSize: 14, color: '#e0e7ff', margin: 0 }}>
+          <p style={{ fontSize: 12, color: '#7dd3c7', margin: '0 0 4px 0' }}>Last Detection</p>
+          <p style={{ fontSize: 14, color: '#e6fffa', margin: 0 }}>
             {lastHazardTime ? new Date(lastHazardTime).toLocaleTimeString() : 'Waiting...'}
           </p>
         </div>
@@ -129,21 +129,21 @@ export default function SensorData() {
         <StatCard title="Safety Score" value={`${safetyScore}/100`} accent="#FFB347" />
       </div>
 
-      <div style={{ background:'rgba(37,99,235,0.06)', border:'1px solid rgba(37,99,235,0.15)', borderRadius:20, padding:18, marginBottom: 20 }}>
+      <div style={{ background:'rgba(0,201,167,0.06)', border:'1px solid rgba(0,201,167,0.15)', borderRadius:20, padding:18, marginBottom: 20 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
           <div>
-            <p style={{ fontSize: 14, color: '#60a5fa', margin: 0 }}>Recent Reports (including live detections)</p>
-            <h2 style={{ fontSize: 18, color: '#e0e7ff', margin: 0 }}>Your contributions</h2>
+            <p style={{ fontSize: 14, color: '#7dd3c7', margin: 0 }}>Recent Reports (including live detections)</p>
+            <h2 style={{ fontSize: 18, color: '#e6fffa', margin: 0 }}>Your contributions</h2>
           </div>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {userReports.slice(0, 5).map((report) => (
             <div key={report.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div>
-                <p style={{ fontWeight: 600, color: '#e0e7ff' }}>{report.type} reported</p>
-                <p style={{ fontSize: 12, color: '#60a5fa' }}>{report.location.city} • {new Date(report.timestamp).toLocaleDateString()}</p>
+                <p style={{ fontWeight: 600, color: '#e6fffa' }}>{report.type} reported</p>
+                <p style={{ fontSize: 12, color: '#7dd3c7' }}>{report.location.city} • {new Date(report.timestamp).toLocaleDateString()}</p>
               </div>
-              <span style={{ padding: '4px 8px', background: report.reporter === 'System (Sensor)' ? '#3b82f6' : '#2563eb', color: '#ffffff', borderRadius: 12, fontSize: 12, fontWeight: 600 }}>
+              <span style={{ padding: '4px 8px', background: report.reporter === 'System (Sensor)' ? '#00c9a7' : '#00b89a', color: '#021c1a', borderRadius: 12, fontSize: 12, fontWeight: 600 }}>
                 {report.reporter === 'System (Sensor)' ? '📡 Auto-Detected' : '✅ Submitted'}
               </span>
             </div>
@@ -152,25 +152,25 @@ export default function SensorData() {
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-        <div style={{ background:'rgba(37,99,235,0.06)', border:'1px solid rgba(37,99,235,0.15)', borderRadius:20, padding:18 }}>
-          <p style={{ fontSize: 14, color: '#60a5fa', margin: 0 }}>Community Impact</p>
-          <h3 style={{ fontSize: 24, color: '#e0e7ff', margin: 0 }}>{communityImpact}</h3>
-          <p style={{ fontSize: 12, color: '#60a5fa', margin: '4px 0 0 0' }}>Users helped by your reports</p>
+        <div style={{ background:'rgba(0,201,167,0.06)', border:'1px solid rgba(0,201,167,0.15)', borderRadius:20, padding:18 }}>
+          <p style={{ fontSize: 14, color: '#7dd3c7', margin: 0 }}>Community Impact</p>
+          <h3 style={{ fontSize: 24, color: '#e6fffa', margin: 0 }}>{communityImpact}</h3>
+          <p style={{ fontSize: 12, color: '#7dd3c7', margin: '4px 0 0 0' }}>Users helped by your reports</p>
         </div>
-        <div style={{ background:'rgba(37,99,235,0.06)', border:'1px solid rgba(37,99,235,0.15)', borderRadius:20, padding:18 }}>
-          <p style={{ fontSize: 14, color: '#60a5fa', margin: 0 }}>Trip History</p>
-          <h3 style={{ fontSize: 24, color: '#e0e7ff', margin: 0 }}>{Math.round(roadsTraveled * 0.8)} km</h3>
-          <p style={{ fontSize: 12, color: '#60a5fa', margin: '4px 0 0 0' }}>This week total</p>
+        <div style={{ background:'rgba(0,201,167,0.06)', border:'1px solid rgba(0,201,167,0.15)', borderRadius:20, padding:18 }}>
+          <p style={{ fontSize: 14, color: '#7dd3c7', margin: 0 }}>Trip History</p>
+          <h3 style={{ fontSize: 24, color: '#e6fffa', margin: 0 }}>{Math.round(roadsTraveled * 0.8)} km</h3>
+          <p style={{ fontSize: 12, color: '#7dd3c7', margin: '4px 0 0 0' }}>This week total</p>
         </div>
-        <div style={{ background:'rgba(37,99,235,0.06)', border:'1px solid rgba(37,99,235,0.15)', borderRadius:20, padding:18 }}>
-          <p style={{ fontSize: 14, color: '#60a5fa', margin: 0 }}>Best Route</p>
-          <h3 style={{ fontSize: 24, color: '#e0e7ff', margin: 0 }}>{stats.dangerousRoad}</h3>
-          <p style={{ fontSize: 12, color: '#60a5fa', margin: '4px 0 0 0' }}>Your safest path</p>
+        <div style={{ background:'rgba(0,201,167,0.06)', border:'1px solid rgba(0,201,167,0.15)', borderRadius:20, padding:18 }}>
+          <p style={{ fontSize: 14, color: '#7dd3c7', margin: 0 }}>Best Route</p>
+          <h3 style={{ fontSize: 24, color: '#e6fffa', margin: 0 }}>{stats.dangerousRoad}</h3>
+          <p style={{ fontSize: 12, color: '#7dd3c7', margin: '4px 0 0 0' }}>Your safest path</p>
         </div>
-        <div style={{ background:'rgba(37,99,235,0.06)', border:'1px solid rgba(37,99,235,0.15)', borderRadius:20, padding:18 }}>
-          <p style={{ fontSize: 14, color: '#60a5fa', margin: 0 }}>Next Trip</p>
-          <h3 style={{ fontSize: 24, color: '#e0e7ff', margin: 0 }}>{stats.bestTime}</h3>
-          <p style={{ fontSize: 12, color: '#60a5fa', margin: '4px 0 0 0' }}>Recommended time</p>
+        <div style={{ background:'rgba(0,201,167,0.06)', border:'1px solid rgba(0,201,167,0.15)', borderRadius:20, padding:18 }}>
+          <p style={{ fontSize: 14, color: '#7dd3c7', margin: 0 }}>Next Trip</p>
+          <h3 style={{ fontSize: 24, color: '#e6fffa', margin: 0 }}>{stats.bestTime}</h3>
+          <p style={{ fontSize: 12, color: '#7dd3c7', margin: '4px 0 0 0' }}>Recommended time</p>
         </div>
       </div>
     </main>
