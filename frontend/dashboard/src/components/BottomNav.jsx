@@ -3,6 +3,7 @@ const TABS = [
   { id: 'report',   icon: '⚠️',  label: 'Report'   },
   { id: 'navigate', icon: '🗺️',  label: 'Navigate' },
   { id: 'sensor',   icon: '📡',  label: 'Activity'   },
+  { id: 'demo',     icon: '🤖',  label: 'AI Demo'   },
   { id: 'profile',  icon: '👤', label: 'Profile'  },
 ];
 

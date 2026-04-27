@@ -13,7 +13,8 @@ const Home = lazy(() => import('./screens/Home.jsx'));
 const Report = lazy(() => import('./screens/Report.jsx'));
 const Navigate = lazy(() => import('./screens/Navigate.jsx'));
 const SensorData = lazy(() => import('./screens/SensorData.jsx'));
-const Profile = lazy(() => import('./screens/Profile.jsx'));// ErrorBoundary class here
+const Profile = lazy(() => import('./screens/Profile.jsx'));
+const ModelDemo = lazy(() => import('./screens/ModelDemo.jsx'));// ErrorBoundary class here
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
@@ -120,6 +121,7 @@ case 'home': return <Suspense fallback={<div/>}><Home /></Suspense>;
 case 'report': return <Suspense fallback={<div/>}><Report /></Suspense>;
 case 'navigate': return <Suspense fallback={<div/>}><Navigate /></Suspense>;
 case 'sensor': return <Suspense fallback={<div/>}><SensorData /></Suspense>;
+case 'demo': return <Suspense fallback={<div/>}><ModelDemo /></Suspense>;
 case 'profile': return <Suspense fallback={<div/>}><Profile /></Suspense>;
 default: return <Suspense fallback={<div/>}><Home /></Suspense>;
 }
