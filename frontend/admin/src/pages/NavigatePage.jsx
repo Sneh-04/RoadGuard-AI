@@ -42,7 +42,7 @@ export default function NavigatePage() {
           </div>
           <div className="grid grid-cols-2 gap-3">
             <button className="rounded-[1.75rem] bg-white/5 px-4 py-3 text-sm font-semibold text-slate-100 transition duration-300 hover:bg-white/10">Swap</button>
-            <button className="rounded-[1.75rem] bg-blue-500/10 px-4 py-3 text-sm font-semibold text-blue-100 transition duration-300 hover:bg-blue-500/20">Plan Safe Route</button>
+            <button className="rounded-[1.75rem] bg-teal-500/10 px-4 py-3 text-sm font-semibold text-teal-100 transition duration-300 hover:bg-teal-500/20">Plan Safe Route</button>
           </div>
         </div>
       </Card>
@@ -64,7 +64,7 @@ export default function NavigatePage() {
       </Card>
 
       <div className="flex items-center gap-3 rounded-[2rem] border border-white/10 bg-white/5 p-4 text-sm text-slate-300 shadow-[0_20px_40px_rgba(20,184,166,0.1)]">
-        <MapPin className="h-5 w-5 text-blue-200" />
+        <MapPin className="h-5 w-5 text-teal-200" />
         <p>Teal line represents the highlighted safe route on the map.</p>
       </div>
     </div>

@@ -26,7 +26,7 @@ const AdminAnalytics = () => {
         <ChartCard title="Severity mix" subtitle="Current distribution" className="">
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="flex items-center justify-center p-4 bg-white/5 rounded-3xl">
-              <div className="h-32 w-32 rounded-full bg-gradient-to-r from-primary via-blue-400 to-blue-300" />
+              <div className="h-32 w-32 rounded-full bg-gradient-to-r from-primary via-teal-400 to-teal-300" />
             </div>
             <div className="space-y-3 text-sm text-white/80">
               <div className="flex items-center justify-between">

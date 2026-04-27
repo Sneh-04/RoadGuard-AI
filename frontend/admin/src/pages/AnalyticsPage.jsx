@@ -84,7 +84,7 @@ export default function AnalyticsPage() {
           <div className="flex items-start justify-between">
             <div>
               <p className="text-slate-400 text-sm font-semibold">Normal Roads</p>
-              <p className="text-4xl font-bold text-blue-400 mt-2">{stats.normal}</p>
+              <p className="text-4xl font-bold text-teal-400 mt-2">{stats.normal}</p>
               <p className="text-xs text-slate-500 mt-2">
                 {stats.total > 0 ? ((stats.normal / stats.total) * 100).toFixed(1) : 0}% of total
               </p>
@@ -128,7 +128,7 @@ export default function AnalyticsPage() {
           <div className="flex items-start justify-between">
             <div>
               <p className="text-slate-400 text-sm font-semibold">Avg Confidence</p>
-              <p className="text-4xl font-bold text-blue-400 mt-2">{stats.avgConfidence}%</p>
+              <p className="text-4xl font-bold text-teal-400 mt-2">{stats.avgConfidence}%</p>
               <p className="text-xs text-slate-500 mt-2">Detection accuracy</p>
             </div>
             <div className="text-3xl">✅</div>

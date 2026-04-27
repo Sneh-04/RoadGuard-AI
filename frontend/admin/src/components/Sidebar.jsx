@@ -40,7 +40,7 @@ export default function Sidebar({ isAdmin, onAdminToggle }) {
       >
         {/* Logo */}
         <div className="p-6 border-b border-slate-700">
-          <h1 className="text-xl font-bold text-blue-400">RoadGuard</h1>
+          <h1 className="text-xl font-bold text-teal-400">RoadGuard</h1>
           <p className="text-xs text-slate-400 mt-1">AI Road Safety</p>
         </div>
 

@@ -21,7 +21,7 @@ const getHazardColor = (label) => {
 const getStatusColor = (label) => {
   const color = getHazardColor(label);
   const colorMap = {
-    'blue': '#3B82F6',
+    'blue': '#00c9a7',
     'orange': '#F59E0B',
     'red': '#EF4444',
     'gray': '#6B7280'
@@ -190,7 +190,7 @@ export default function HazardMap() {
                           <span className={`px-2 py-1 text-xs font-medium rounded-full ${
                             report.status === 'solved' ? 'bg-green-100 text-green-800' :
                             report.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                            report.status === 'in_progress' ? 'bg-blue-100 text-blue-800' :
+                            report.status === 'in_progress' ? 'bg-teal-100 text-teal-800' :
                             'bg-red-100 text-red-800'
                           }`}>
                             {report.status}
@@ -230,7 +230,7 @@ export default function HazardMap() {
               <span className={`px-2 py-1 text-xs font-medium rounded-full ${
                 selectedReport.status === 'Resolved' ? 'bg-green-100 text-green-800' :
                 selectedReport.status === 'Pending' ? 'bg-yellow-100 text-yellow-800' :
-                selectedReport.status === 'In Progress' ? 'bg-blue-100 text-blue-800' :
+                selectedReport.status === 'In Progress' ? 'bg-teal-100 text-teal-800' :
                 'bg-red-100 text-red-800'
               }`}>
                 {selectedReport.status}

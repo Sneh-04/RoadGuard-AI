@@ -18,7 +18,7 @@ export default function Profile() {
   };
 
   return (
-    <main style={{ padding: 20, background: '#060D0D' }}>
+    <main style={{ padding: 20, background: '#021c1a' }}>
       <div style={{ background:'rgba(0,201,167,0.06)', border:'1px solid rgba(0,201,167,0.15)', borderRadius:20, padding:18, marginBottom: 20 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 16 }}>
           <div style={{ width: 64, height: 64, borderRadius: 32, background: '#00C9A7', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#060D0D', fontSize: 24, fontWeight: 600 }}>{user?.avatar ? <img style={{ width: '100%', height: '100%', borderRadius: 32 }} src={user.avatar} alt="Profile" /> : user?.fullName?.charAt(0)}</div>

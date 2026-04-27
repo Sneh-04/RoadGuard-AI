@@ -63,7 +63,7 @@ export default function AdminDashboard() {
         </div>
         <div className="bg-slate-800 border border-slate-700 rounded-lg p-6">
           <p className="text-slate-400 text-sm font-semibold">Normal Roads</p>
-          <p className="text-4xl font-bold text-blue-400 mt-2">{stats.normal}</p>
+          <p className="text-4xl font-bold text-teal-400 mt-2">{stats.normal}</p>
           <p className="text-xs text-slate-500 mt-2">
             {stats.total > 0 ? ((stats.normal / stats.total) * 100).toFixed(0) : 0}% of total
           </p>
@@ -86,7 +86,7 @@ export default function AdminDashboard() {
 
       {/* Quick Actions */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 rounded-lg transition-colors">
+        <button className="bg-teal-600 hover:bg-teal-700 text-white font-semibold py-4 rounded-lg transition-colors">
           ✅ Mark Solved
         </button>
         <button className="bg-slate-700 hover:bg-slate-600 text-slate-100 font-semibold py-4 rounded-lg transition-colors">

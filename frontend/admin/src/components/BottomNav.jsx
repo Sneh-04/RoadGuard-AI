@@ -20,7 +20,7 @@ export default function BottomNav({ active, onChange }) {
               key={item.key}
               type="button"
               onClick={() => onChange(item.key)}
-              className={`group flex flex-col items-center justify-center gap-1 rounded-3xl px-3 py-2 text-xs font-semibold transition duration-300 ${isActive ? 'bg-blue-500/15 text-blue-200 shadow-[0_10px_30px_rgba(37,99,235,0.24)]' : 'text-slate-400 hover:text-slate-100 hover:bg-white/5'}`}
+              className={`group flex flex-col items-center justify-center gap-1 rounded-3xl px-3 py-2 text-xs font-semibold transition duration-300 ${isActive ? 'bg-teal-500/15 text-teal-200 shadow-[0_10px_30px_rgba(0,201,167,0.24)]' : 'text-slate-400 hover:text-slate-100 hover:bg-white/5'}`}
             >
               <Icon className="h-5 w-5" />
               {item.label}

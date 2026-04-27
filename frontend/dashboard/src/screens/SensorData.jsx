@@ -86,7 +86,7 @@ export default function SensorData() {
             animation: 'pulse 2s infinite',
             boxShadow: '0 0 10px rgba(34, 197, 94, 0.6)',
           }} />
-          <div style={{ padding: '4px 12px', background: '#2563eb', color: '#ffffff', borderRadius: 12, fontSize: 12, fontWeight: 600 }}>
+          <div style={{ padding: '4px 12px', background: '#00c9a7', color: '#021c1a', borderRadius: 12, fontSize: 12, fontWeight: 600 }}>
             {sensorStreamActive ? 'Live Sensor: ACTIVE' : 'Inactive'}
           </div>
         </div>
@@ -102,8 +102,8 @@ export default function SensorData() {
 
       {/* Hazard Detection Stats */}
       <div style={{ 
-        background: 'rgba(37,99,235,0.06)', 
-        border: '1px solid rgba(37,99,235,0.15)', 
+        background: 'rgba(0,201,167,0.06)', 
+        border: '1px solid rgba(0,201,167,0.15)', 
         borderRadius: 12, 
         padding: 12, 
         marginBottom: 20,
@@ -123,9 +123,9 @@ export default function SensorData() {
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 20 }}>
-        <StatCard title="Roads Traveled Today" value={`${roadsTraveled} km`} accent="#2563eb" />
-        <StatCard title="Hazards Encountered" value={hazardsEncountered} accent="#3b82f6" />
-        <StatCard title="Reports Submitted" value={userReports.length} accent="#60a5fa" />
+        <StatCard title="Roads Traveled Today" value={`${roadsTraveled} km`} accent="#00c9a7" />
+        <StatCard title="Hazards Encountered" value={hazardsEncountered} accent="#00c9a7" />
+        <StatCard title="Reports Submitted" value={userReports.length} accent="#00c9a7" />
         <StatCard title="Safety Score" value={`${safetyScore}/100`} accent="#FFB347" />
       </div>
 

@@ -9,7 +9,7 @@ const Home = () => {
 
       <Card>
         <div className="flex items-center space-x-4">
-          <CloudRain className="text-blue-400" size={32} />
+          <CloudRain className="text-teal-400" size={32} />
           <div>
             <div className="text-lg font-semibold">24°C</div>
             <div className="text-sm text-white/70">Rainy, 75% humidity, 10 km/h wind</div>

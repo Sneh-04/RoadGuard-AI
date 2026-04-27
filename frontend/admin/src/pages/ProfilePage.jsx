@@ -15,14 +15,14 @@ export default function ProfilePage() {
       <Card className="p-6">
         <div className="flex flex-col gap-6 rounded-[2rem] border border-white/10 bg-[#0f2f2f]/80 p-6 shadow-[0_30px_80px_rgba(20,184,166,0.16)] backdrop-blur-xl sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-4">
-            <div className="flex h-20 w-20 items-center justify-center rounded-full bg-white/10 text-blue-200 shadow-[0_20px_40px_rgba(37,99,235,0.12)]">
+            <div className="flex h-20 w-20 items-center justify-center rounded-full bg-white/10 text-teal-200 shadow-[0_20px_40px_rgba(0,201,167,0.12)]">
               <UserCircle2 className="h-10 w-10" />
             </div>
             <div>
               <h1 className="text-2xl font-semibold text-slate-100">Snehalatha</h1>
-              <p className="mt-1 text-sm text-slate-400 flex items-center gap-2"><Mail className="h-4 w-4 text-blue-200" /> snehalatha@example.com</p>
-              <p className="mt-1 text-sm text-slate-400 flex items-center gap-2"><Smartphone className="h-4 w-4 text-blue-200" /> +91 98765 43210</p>
-              <p className="mt-1 text-sm text-slate-400 flex items-center gap-2"><MapPin className="h-4 w-4 text-blue-200" /> Markapur • Bike</p>
+              <p className="mt-1 text-sm text-slate-400 flex items-center gap-2"><Mail className="h-4 w-4 text-teal-200" /> snehalatha@example.com</p>
+              <p className="mt-1 text-sm text-slate-400 flex items-center gap-2"><Smartphone className="h-4 w-4 text-teal-200" /> +91 98765 43210</p>
+              <p className="mt-1 text-sm text-slate-400 flex items-center gap-2"><MapPin className="h-4 w-4 text-teal-200" /> Markapur • Bike</p>
             </div>
           </div>
           <div className="grid w-full gap-4 sm:w-auto sm:grid-cols-3">

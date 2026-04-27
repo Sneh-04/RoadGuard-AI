@@ -105,7 +105,7 @@ export default function AdminDashboard({ onLogout }) {
             animation: 'pulse 2s infinite',
             boxShadow: '0 0 10px rgba(34, 197, 94, 0.6)',
           }} />
-          <div style={{ padding: '4px 12px', background: '#2563eb', color: '#ffffff', borderRadius: 12, fontSize: 12, fontWeight: 600 }}>
+          <div style={{ padding: '4px 12px', background: '#00c9a7', color: '#021c1a', borderRadius: 12, fontSize: 12, fontWeight: 600 }}>
             {sensorStreamActive ? 'Live Sensor: ACTIVE' : 'Inactive'}
           </div>
         </div>
@@ -171,7 +171,7 @@ export default function AdminDashboard({ onLogout }) {
       <div style={{ background:'rgba(37,99,235,0.06)', border:'1px solid rgba(37,99,235,0.15)', borderRadius:20, padding:18, marginBottom: 20 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
           <div>
-            <p style={{ fontSize: 14, color: '#60a5fa', margin: 0 }}>🚨 Recent Reports (including live sensor detections)</p>
+            <p style={{ fontSize: 14, color: '#7dd3c7', margin: 0 }}>🚨 Recent Reports (including live sensor detections)</p>
             <h2 style={{ fontSize: 18, color: '#e0e7ff', margin: 0 }}>Latest admin activity</h2>
           </div>
         </div>
@@ -180,11 +180,11 @@ export default function AdminDashboard({ onLogout }) {
             <div key={report.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div>
                 <p style={{ fontWeight: 600, color: '#e0e7ff' }}>{report.type} • {report.location.address}</p>
-                <p style={{ fontSize: 12, color: '#60a5fa' }}>{report.reporter} · {timeAgo(report.timestamp)}</p>
+                <p style={{ fontSize: 12, color: '#7dd3c7' }}>{report.reporter} · {timeAgo(report.timestamp)}</p>
               </div>
               <div style={{ display: 'flex', gap: 8 }}>
-                <button type="button" style={{ padding: 8, background: '#2563eb', color: '#ffffff', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 600 }} onClick={() => handleAction(report.id, 'resolve')}>✅ Resolve</button>
-                <button type="button" style={{ padding: 8, background: '#60a5fa', color: '#060D0D', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 600 }} onClick={() => handleAction(report.id, 'ignore')}>❌ Ignore</button>
+                <button type="button" style={{ padding: 8, background: '#00c9a7', color: '#021c1a', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 600 }} onClick={() => handleAction(report.id, 'resolve')}>✅ Resolve</button>
+                <button type="button" style={{ padding: 8, background: '#00b89a', color: '#021c1a', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 600 }} onClick={() => handleAction(report.id, 'ignore')}>❌ Ignore</button>
               </div>
             </div>
           ))}
@@ -194,14 +194,14 @@ export default function AdminDashboard({ onLogout }) {
       <div style={{ background:'rgba(37,99,235,0.06)', border:'1px solid rgba(37,99,235,0.15)', borderRadius:20, padding:18 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
           <div>
-            <p style={{ fontSize: 14, color: '#60a5fa', margin: 0 }}>Action Timeline</p>
+            <p style={{ fontSize: 14, color: '#7dd3c7', margin: 0 }}>Action Timeline</p>
             <h2 style={{ fontSize: 18, color: '#e0e7ff', margin: 0 }}>Real-time sensor & admin operations</h2>
           </div>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           {['Sensor simulation active', 'Real-time hazard detection', 'Community reports merged', 'Admin monitoring live', 'System fully operational'].map((item, idx) => (
             <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <span style={{ width: 8, height: 8, borderRadius: 4, background: '#2563eb' }} />
+              <span style={{ width: 8, height: 8, borderRadius: 4, background: '#00c9a7' }} />
               <p style={{ color: '#e0e7ff' }}>{item}</p>
             </div>
           ))}
@@ -424,12 +424,12 @@ export default function AdminDashboard({ onLogout }) {
 
   return (
     <main style={{ height: '100vh', display: 'flex', flexDirection: 'column', background: '#060D0D' }}>
-      <div style={{ padding: 20, background: '#060D0D', borderBottom: '1px solid rgba(37,99,235,0.15)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div style={{ padding: 20, background: '#021c1a', borderBottom: '1px solid rgba(0,201,167,0.15)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
-          <p style={{ fontSize: 14, color: '#60a5fa', margin: 0 }}>Admin Dashboard</p>
+          <p style={{ fontSize: 14, color: '#7dd3c7', margin: 0 }}>Admin Dashboard</p>
           <h1 style={{ fontSize: 24, color: '#e0e7ff', margin: 0 }}>Control Center</h1>
         </div>
-        <button type="button" style={{ padding: 8, background: '#2563eb', color: '#ffffff', border: 'none', borderRadius: 8, cursor: 'pointer' }} onClick={handleLogout}>Logout</button>
+        <button type="button" style={{ padding: 8, background: '#00c9a7', color: '#021c1a', border: 'none', borderRadius: 8, cursor: 'pointer' }} onClick={handleLogout}>Logout</button>
       </div>
       {activeTab === 'overview' && renderOverview()}
       {activeTab === 'reports' && renderReports()}
@@ -437,34 +437,34 @@ export default function AdminDashboard({ onLogout }) {
       {activeTab === 'analytics' && renderAnalytics()}
       {activeTab === 'settings' && renderSettings()}
 
-      <nav style={{ position: 'fixed', bottom: 0, left: 0, right: 0, height: '72px', paddingBottom: 'env(safe-area-inset-bottom, 0px)', background: 'rgba(6,13,13,0.97)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', borderTop: '1px solid rgba(37,99,235,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'space-around', zIndex: 1000 }}>
+      <nav style={{ position: 'fixed', bottom: 0, left: 0, right: 0, height: '72px', paddingBottom: 'env(safe-area-inset-bottom, 0px)', background: 'rgba(6,13,13,0.97)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', borderTop: '1px solid rgba(0,201,167,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'space-around', zIndex: 1000 }}>
         {tabs.map((tab) => (
           <button
             key={tab.key}
             type="button"
-            style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1, height: '100%', gap: '3px', border: 'none', background: activeTab === tab.key ? 'rgba(37,99,235,0.1)' : 'none', cursor: 'pointer', padding: '8px 0', WebkitTapHighlightColor: 'transparent', transform: activeTab === tab.key ? 'scale(1.05)' : 'scale(1)', transition: 'all 0.2s ease' }}
+            style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1, height: '100%', gap: '3px', border: 'none', background: activeTab === tab.key ? 'rgba(0,201,167,0.1)' : 'none', cursor: 'pointer', padding: '8px 0', WebkitTapHighlightColor: 'transparent', transform: activeTab === tab.key ? 'scale(1.05)' : 'scale(1)', transition: 'all 0.2s ease' }}
             onClick={() => setActiveTab(tab.key)}
           >
-            <span style={{ fontSize: '26px', lineHeight: 1, filter: activeTab === tab.key ? 'drop-shadow(0 0 8px #2563eb)' : 'none', transition: 'all 0.2s ease' }}>{tab.icon}</span>
-            <span style={{ fontSize: '11px', fontWeight: 600, color: activeTab === tab.key ? '#2563eb' : '#60a5fa', transition: 'color 0.2s ease' }}>{tab.label}</span>
+            <span style={{ fontSize: '26px', lineHeight: 1, filter: activeTab === tab.key ? 'drop-shadow(0 0 8px #00c9a7)' : 'none', transition: 'all 0.2s ease' }}>{tab.icon}</span>
+            <span style={{ fontSize: '11px', fontWeight: 600, color: activeTab === tab.key ? '#00c9a7' : '#7dd3c7', transition: 'color 0.2s ease' }}>{tab.label}</span>
           </button>
         ))}
       </nav>
-      {toast && <div style={{ position: 'fixed', top: 20, left: 20, right: 20, zIndex: 2000, background:'rgba(37,99,235,0.06)', border:'1px solid rgba(37,99,235,0.15)', borderRadius:20, padding:18 }}><div style={{ display: 'flex', justifyContent: 'center' }}><span style={{ color: '#e0e7ff' }}>{toast}</span></div></div>}
+      {toast && <div style={{ position: 'fixed', top: 20, left: 20, right: 20, zIndex: 2000, background:'rgba(0,201,167,0.06)', border:'1px solid rgba(0,201,167,0.15)', borderRadius:20, padding:18 }}><div style={{ display: 'flex', justifyContent: 'center' }}><span style={{ color: '#e0e7ff' }}>{toast}</span></div></div>}
       {showDetail && selectedReport && (
         <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.8)', zIndex: 3000, display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => setShowDetail(false)}>
-          <div style={{ background:'rgba(37,99,235,0.06)', border:'1px solid rgba(37,99,235,0.15)', borderRadius:20, padding:18, maxWidth: 400, width: '90%', position: 'relative' }} onClick={(e) => e.stopPropagation()}>
+          <div style={{ background:'rgba(0,201,167,0.06)', border:'1px solid rgba(0,201,167,0.15)', borderRadius:20, padding:18, maxWidth: 400, width: '90%', position: 'relative' }} onClick={(e) => e.stopPropagation()}>
             <button type="button" style={{ position: 'absolute', top: 10, right: 10, background: 'none', border: 'none', color: '#e0e7ff', fontSize: 24, cursor: 'pointer' }} onClick={() => setShowDetail(false)}>×</button>
             <img style={{ width: '100%', height: 200, objectFit: 'cover', borderRadius: 16 }} src={selectedReport.image} alt={selectedReport.type} />
             <div style={{ paddingTop: 16 }}>
-              <p style={{ fontSize: 14, color: '#60a5fa', margin: 0 }}>{selectedReport.type}</p>
+              <p style={{ fontSize: 14, color: '#7dd3c7', margin: 0 }}>{selectedReport.type}</p>
               <h2 style={{ fontSize: 18, color: '#e0e7ff', margin: 0 }}>{selectedReport.location.address}</h2>
-              <p style={{ fontSize: 12, color: '#60a5fa', margin: '4px 0' }}>Reported by {selectedReport.reporter} · {timeAgo(selectedReport.timestamp)}</p>
-              <p style={{ color: '#60a5fa', margin: '8px 0' }}>{selectedReport.description || 'No additional description provided.'}</p>
+              <p style={{ fontSize: 12, color: '#7dd3c7', margin: '4px 0' }}>Reported by {selectedReport.reporter} · {timeAgo(selectedReport.timestamp)}</p>
+              <p style={{ color: '#7dd3c7', margin: '8px 0' }}>{selectedReport.description || 'No additional description provided.'}</p>
               <div style={{ display: 'flex', gap: 8, marginTop: 16 }}>
-                <button type="button" style={{ padding: 12, background: '#2563eb', color: '#ffffff', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 600 }} onClick={() => { handleAction(selectedReport.id, 'resolve'); setShowDetail(false); }}>✅ Resolve</button>
-                <button type="button" style={{ padding: 12, background: '#60a5fa', color: '#060D0D', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 600 }} onClick={() => { handleAction(selectedReport.id, 'ignore'); setShowDetail(false); }}>❌ Ignore</button>
-                <button type="button" style={{ padding: 12, background: '#60a5fa', color: '#060D0D', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 600 }}>🚩 Escalate</button>
+                <button type="button" style={{ padding: 12, background: '#00c9a7', color: '#021c1a', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 600 }} onClick={() => { handleAction(selectedReport.id, 'resolve'); setShowDetail(false); }}>✅ Resolve</button>
+                <button type="button" style={{ padding: 12, background: '#00b89a', color: '#021c1a', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 600 }} onClick={() => { handleAction(selectedReport.id, 'ignore'); setShowDetail(false); }}>❌ Ignore</button>
+                <button type="button" style={{ padding: 12, background: '#00b89a', color: '#021c1a', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 600 }}>🚩 Escalate</button>
               </div>
             </div>
           </div>

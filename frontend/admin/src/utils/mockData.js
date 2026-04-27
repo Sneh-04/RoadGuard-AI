@@ -91,7 +91,7 @@ export const sampleUsers = [
 
 export const sampleAnalytics = {
   kpis: [
-    { title: 'Total Reports', value: 846, trend: '+12%', icon: 'bar-chart', color: '#3B82F6', subtitle: '↑ 12% today' },
+    { title: 'Total Reports', value: 846, trend: '+12%', icon: 'bar-chart', color: '#00c9a7', subtitle: '↑ 12% today' },
     { title: 'Pending', value: 124, trend: '⚠️', icon: 'clock', color: '#F59E0B', subtitle: 'Needs attention' },
     { title: 'Resolved', value: 692, trend: '+18%', icon: 'check-circle', color: '#22C55E', subtitle: 'This week' },
     { title: 'Active Users', value: 1240, trend: '👥', icon: 'users', color: '#06B6D4', subtitle: 'Online now' },
@@ -125,7 +125,7 @@ export const sampleAnalytics = {
     { name: 'T Nagar', count: 51, severity: 74 },
   ],
   typeBreakdown: [
-    { name: 'Pothole', count: 312, color: '#3B82F6' },
+    { name: 'Pothole', count: 312, color: '#00c9a7' },
     { name: 'Crack', count: 198, color: '#F59E0B' },
     { name: 'Speedbump', count: 146, color: '#22C55E' },
     { name: 'Flooding', count: 90, color: '#6366F1' },
