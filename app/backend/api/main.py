@@ -34,6 +34,7 @@ from .routes import (
     health_router,
     predictions_router,
     events_router,
+    realtime_router,
 )
 from .routes.predictions import set_app_state
 
@@ -201,6 +202,7 @@ app.include_router(admin_router)
 app.include_router(health_router)
 app.include_router(predictions_router)
 app.include_router(events_router)
+app.include_router(realtime_router)
 
 
 # ============================================================================

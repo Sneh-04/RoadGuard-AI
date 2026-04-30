@@ -4,6 +4,7 @@ from .admin import router as admin_router
 from .health import router as health_router
 from .predictions import router as predictions_router
 from .events import router as events_router
+from .realtime import router as realtime_router
 
 __all__ = [
     "auth_router",
@@ -11,4 +12,5 @@ __all__ = [
     "health_router",
     "predictions_router",
     "events_router",
+    "realtime_router",
 ]
