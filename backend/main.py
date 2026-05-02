@@ -15,9 +15,11 @@ import asyncio
 import base64
 import io
 import logging
+import os
 import time
 import random
 from datetime import datetime, timedelta
+from pathlib import Path
 from typing import List, Optional
 
 import cv2
@@ -30,15 +32,19 @@ from pydantic import BaseModel, Field
 from .database import init_db, close_db
 from .routes import router as admin_router
 
-YOLO_MODEL_PATH = "models/best.pt"
-STAGE1_MODEL = "models/stage1_binary_v2.keras"
-STAGE2_MODEL = "models/stage2_subtype_v2.keras"
+BASE_DIR = Path(__file__).resolve().parent.parent
+MODEL_DIR = BASE_DIR / "models"
+YOLO_MODEL_PATH = MODEL_DIR / "best.pt"
+STAGE1_MODEL = MODEL_DIR / "stage1_binary_v2.keras"
+STAGE2_MODEL = MODEL_DIR / "stage2_subtype_v2.keras"
+
+PRODUCTION = os.getenv("PRODUCTION", "false").lower() == "true"
+DISABLE_ML = os.getenv("DISABLE_ML", "false").lower() == "true"
 
 stage1_model = None
 stage2_model = None
 yolo_model = None
 manager = None  # Will be set to _FallbackManager() if not imported
-PRODUCTION = False
 
 # ── Logging setup first ─────────────────────────────────────────────────────
 logging.basicConfig(level=logging.INFO)
@@ -197,7 +203,17 @@ def _decode_image(img_bytes: bytes) -> np.ndarray:
     return img
 
 
+def _sensor_inference_dummy():
+    """Return dummy sensor prediction when ML is disabled."""
+    labels = ["Normal", "Pothole", "Speed Breaker"]
+    label = labels[random.randint(0, 2)]
+    confidence = random.uniform(0.6, 0.95)
+    return label, confidence, "sensor_dummy"
+
+
 def _sensor_inference(arr: np.ndarray):
+    if DISABLE_ML:
+        return _sensor_inference_dummy()
     if stage1_model is None or stage2_model is None:
         raise RuntimeError("Sensor models are unavailable")
     data = np.expand_dims(arr, axis=0)
@@ -220,7 +236,17 @@ def _sensor_inference(arr: np.ndarray):
     return label, confidence, "sensor"
 
 
+def _vision_inference_dummy():
+    """Return dummy vision prediction when ML is disabled."""
+    labels = ["Normal", "Pothole", "Speed Breaker"]
+    label = labels[random.randint(0, 2)]
+    confidence = random.uniform(0.5, 0.85)
+    return label, confidence, "vision_dummy"
+
+
 def _vision_inference(img_bytes: bytes):
+    if DISABLE_ML:
+        return _vision_inference_dummy()
     if yolo_model is None:
         raise RuntimeError("YOLO model is unavailable")
     img = _decode_image(img_bytes)
@@ -234,6 +260,58 @@ def _vision_inference(img_bytes: bytes):
     conf = float(result.boxes.conf[0])
     label = result.names.get(cls, "Unknown")
     return label, conf, "vision"
+
+
+def _try_load_keras_model(path: Path):
+    try:
+        from keras.models import load_model
+    except ImportError:
+        try:
+            from tensorflow.keras.models import load_model
+        except ImportError as e:
+            logger.warning("Keras load_model import failed: %s", e)
+            return None
+
+    try:
+        logger.info("Loading sensor model from %s", path)
+        return load_model(str(path))
+    except Exception as e:
+        logger.warning("Failed to load Keras model %s: %s", path, e)
+        return None
+
+
+def load_models():
+    global stage1_model, stage2_model, yolo_model
+
+    if DISABLE_ML:
+        logger.info("ML disabled (DISABLE_ML=true): skipping model loading")
+        return
+
+    if not PRODUCTION:
+        logger.info("Production mode disabled: using fallback inference.")
+        return
+
+    if YOLO_MODEL_PATH.exists():
+        try:
+            from ultralytics import YOLO
+            yolo_model = YOLO(str(YOLO_MODEL_PATH))
+            logger.info("Loaded YOLO model from %s", YOLO_MODEL_PATH)
+        except Exception as e:
+            logger.warning("Unable to load YOLO model: %s", e)
+            yolo_model = None
+    else:
+        logger.warning("YOLO model file not found at %s", YOLO_MODEL_PATH)
+        yolo_model = None
+
+    if STAGE1_MODEL.exists() and STAGE2_MODEL.exists():
+        stage1_model = _try_load_keras_model(STAGE1_MODEL)
+        stage2_model = _try_load_keras_model(STAGE2_MODEL)
+        if stage1_model is None or stage2_model is None:
+            logger.warning("One or more sensor models failed to load; using fallback inference.")
+    else:
+        logger.warning("Sensor model files are missing: %s, %s", STAGE1_MODEL, STAGE2_MODEL)
+        stage1_model = None
+        stage2_model = None
 
 
 def _fuse_predictions(sensor_pred, vision_pred):
@@ -272,21 +350,29 @@ def _store_event(label_id, label, confidence, p_sensor, p_vision, lat, lon, ts, 
 # ── Startup ───────────────────────────────────────────────────────────────────
 @app.on_event("startup")
 async def startup():
-    await init_db()
-    if PRODUCTION:
-        try: init_db()
-        except Exception as e: logger.warning(f"DB init skipped: {e}")
-    logger.info("RoadGuard-AI API ready")
+    logger.info("Starting RoadGuard-AI API...")
+    db_ok = await init_db()
+    if not db_ok:
+        logger.warning("Database not available; continuing with fallback in-memory storage.")
+    load_models()
+    ml_status = "disabled" if DISABLE_ML else ("production" if PRODUCTION else "fallback")
+    logger.info("RoadGuard-AI API ready (ml=%s, production=%s)", ml_status, PRODUCTION)
 
 @app.on_event("shutdown")
 async def shutdown():
     await close_db()
 
 # ── Health ────────────────────────────────────────────────────────────────────
+@app.get("/health")
+async def health_check():
+    return {"status": "ok"}
+
 @app.get("/api/health")
 async def health():
+    ml_status = "disabled" if DISABLE_ML else ("production" if PRODUCTION else "fallback")
     return {
         "status": "ok",
+        "ml": ml_status,
         "mode": "production" if PRODUCTION else "fallback",
         "timestamp": datetime.utcnow().isoformat(),
         "events_stored": len(events),

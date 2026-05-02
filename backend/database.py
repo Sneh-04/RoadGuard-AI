@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 # MongoDB connection
 MONGODB_URL = os.getenv("MONGODB_URL", "mongodb://localhost:27017")
-DATABASE_NAME = "roadguard_admin"
+DATABASE_NAME = os.getenv("DATABASE_NAME", "roadguard_admin")
 
 client: Optional[AsyncIOMotorClient] = None
 db = None

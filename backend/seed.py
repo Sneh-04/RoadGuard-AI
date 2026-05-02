@@ -1,7 +1,7 @@
 import asyncio
-from database import init_db, create_user, create_complaint
-from models import Complaint
-from auth import get_password_hash
+from .database import init_db, create_user, create_complaint
+from .models import Complaint
+from .auth import get_password_hash
 from datetime import datetime, timedelta
 import random
 
