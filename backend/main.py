@@ -27,12 +27,12 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
 # Import admin modules
-from database import init_db, close_db
-from routes import router as admin_router
+from .database import init_db, close_db
+from .routes import router as admin_router
 
-YOLO_MODEL_PATH = "../models/best.pt"
-STAGE1_MODEL = "../models/stage1_binary_v2.keras"
-STAGE2_MODEL = "../models/stage2_subtype_v2.keras"
+YOLO_MODEL_PATH = "models/best.pt"
+STAGE1_MODEL = "models/stage1_binary_v2.keras"
+STAGE2_MODEL = "models/stage2_subtype_v2.keras"
 
 stage1_model = None
 stage2_model = None

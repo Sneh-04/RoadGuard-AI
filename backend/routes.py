@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Security, UploadFile, File
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from models import LoginRequest, TokenResponse, ComplaintCreate, ComplaintUpdate, Complaint
-from database import get_user_by_email, create_user, create_complaint, get_complaints, get_complaint_by_id, update_complaint_status, get_analytics, get_activity_logs
-from auth import verify_password, get_password_hash, create_access_token, verify_token
+from .models import LoginRequest, TokenResponse, ComplaintCreate, ComplaintUpdate, Complaint
+from .database import get_user_by_email, create_user, create_complaint, get_complaints, get_complaint_by_id, update_complaint_status, get_analytics, get_activity_logs
+from .auth import verify_password, get_password_hash, create_access_token, verify_token
 from typing import List, Optional
 import logging
 import os

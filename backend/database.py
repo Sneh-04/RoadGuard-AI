@@ -1,7 +1,7 @@
 from motor.motor_asyncio import AsyncIOMotorClient
 from pymongo.errors import ConnectionFailure
 from bson import ObjectId
-from models import User, Complaint, ActivityLog
+from .models import User, Complaint, ActivityLog
 from datetime import datetime, timedelta
 from typing import List, Optional
 import logging
