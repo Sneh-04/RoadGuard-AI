@@ -8,37 +8,76 @@ export default function App() {
   const buffer = useRef<number[][]>([]);
   const [status, setStatus] = useState("Connecting...");
   const [lastAlert, setLastAlert] = useState<string | null>(null);
+  const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const WS_URL = "wss://roadguard-ai-3.onrender.com/ws/live";
+
+  const connectWebSocket = () => {
+    try {
+      ws.current = new WebSocket(WS_URL);
+
+      ws.current.onopen = () => {
+        console.log("Connected to backend");
+        setStatus("Connected ✅");
+      };
+
+      ws.current.onmessage = (e: MessageEvent) => {
+        const data = JSON.parse(e.data);
+        console.log("Result:", data);
+
+        if (data.type === "hazard_alert" && data.hazard_detected) {
+          const hazardType = data.hazard_type;
+          setLastAlert(`${hazardType} (${new Date().toLocaleTimeString()})`);
+
+          let alertMessage = "";
+          if (hazardType === "pothole") {
+            alertMessage = "⚠️ Pothole detected!";
+          } else if (hazardType === "speed_bump") {
+            alertMessage = "🚧 Speed bump ahead";
+          } else if (hazardType === "rough_road") {
+            alertMessage = "⚠️ Rough road";
+          } else {
+            alertMessage = `⚠️ ${hazardType} detected!`;
+          }
+
+          // Vibrate for 500ms
+          Vibration.vibrate(500);
+
+          // Show toast notification
+          ToastAndroid.show(alertMessage, ToastAndroid.SHORT);
+        } else if (data.type === "status") {
+          console.log("Status:", data.message);
+        }
+      };
+
+      ws.current.onerror = () => setStatus("Error ❌");
+
+      ws.current.onclose = () => {
+        console.log("WebSocket disconnected. Reconnecting in 3 seconds...");
+        setStatus("Reconnecting...");
+        if (reconnectTimeoutRef.current) {
+          clearTimeout(reconnectTimeoutRef.current);
+        }
+        reconnectTimeoutRef.current = setTimeout(() => connectWebSocket(), 3000);
+      };
+    } catch (error) {
+      console.error("WebSocket connection error:", error);
+      setStatus("Connection failed");
+    }
+  };
 
   // 🔌 Connect WebSocket
   useEffect(() => {
-    ws.current = new WebSocket("wss://roadguard-ai-3.onrender.com/ws/live");
+    connectWebSocket();
 
-    ws.current.onopen = () => {
-      console.log("Connected to backend");
-      setStatus("Connected ✅");
-    };
-
-    ws.current.onmessage = (e: MessageEvent) => {
-      const data = JSON.parse(e.data);
-      console.log("Result:", data);
-
-      if (data.type === "hazard_alert" && data.hazard_detected) {
-        const hazardType = data.hazard_type;
-        setLastAlert(`${hazardType} (${new Date().toLocaleTimeString()})`);
-
-        // Vibrate for 500ms
-        Vibration.vibrate(500);
-
-        // Show toast notification
-        ToastAndroid.show(`⚠️ ${hazardType} detected!`, ToastAndroid.SHORT);
-      } else if (data.type === "status") {
-        console.log("Status:", data.message);
+    return () => {
+      if (ws.current) {
+        ws.current.close();
+      }
+      if (reconnectTimeoutRef.current) {
+        clearTimeout(reconnectTimeoutRef.current);
       }
     };
-
-    ws.current.onerror = () => setStatus("Error ❌");
-
-    return () => ws.current.close();
   }, []);
 
   // 📍 Get Location

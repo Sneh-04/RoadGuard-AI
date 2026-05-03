@@ -1,124 +1,64 @@
-import time
 import math
 import random
-from collections import deque
+import time
 
-# Store last few readings
-ACCEL_HISTORY = deque(maxlen=5)
-LAST_EVENT_TIME = 0
+GRAVITY = 9.8
+MIN_SPEED = 5          # km/h → ignore noise when slow
+POTHOLE_IMPACT = 18    # strong spike
+SPEED_BUMP_RANGE = (13, 18)
+ROUGH_THRESHOLD = 11   # continuous vibration
+COOLDOWN = 1.5         # seconds
 
-# Thresholds (tune if needed)
-VERTICAL_THRESHOLD = 15
-IMPACT_DROP = 3
-IMPACT_RISE = 3
-COOLDOWN = 1.5  # seconds
-ROUGH_ROAD_THRESHOLD = 12
-MIN_SPEED_THRESHOLD = 5  # km/h - don't detect hazards when moving too slow
+last_event_time = 0
 
 
-def magnitude(x, y, z):
+def magnitude(accel):
+    x, y, z = accel
     return math.sqrt(x*x + y*y + z*z)
 
 
-def is_vertical_spike(ax, ay, az):
-    return abs(az) > abs(ax) and abs(az) > abs(ay) and abs(az) > VERTICAL_THRESHOLD
+def smart_prediction(data):
+    global last_event_time
 
+    accel = data.get("accel", [0, 0, GRAVITY])
+    speed = data.get("speed", 0)
 
-def detect_impact_pattern(z_values):
-    if len(z_values) < 3:
-        return False
-
-    prev, curr, next_ = z_values[-3], z_values[-2], z_values[-1]
-
-    # dip then rise (pothole pattern)
-    if curr < prev - IMPACT_DROP and next_ > curr + IMPACT_RISE:
-        return True
-
-    return False
-
-
-def can_trigger():
-    global LAST_EVENT_TIME
+    mag = magnitude(accel)
+    vertical_spike = abs(mag - GRAVITY)
     now = time.time()
-    if now - LAST_EVENT_TIME > COOLDOWN:
-        LAST_EVENT_TIME = now
-        return True
-    return False
 
+    # 🚫 Ignore if too slow
+    if speed < MIN_SPEED:
+        return {"hazard": "clear", "confidence": 0.95}
 
-def detect_pothole(accel, speed=0):
-    global ACCEL_HISTORY
+    # 🚫 Cooldown (avoid spam)
+    if now - last_event_time < COOLDOWN:
+        return {"hazard": "clear", "confidence": 0.90}
 
-    # Don't detect hazards when moving too slow (prevents false alerts from shaking)
-    if speed < MIN_SPEED_THRESHOLD:
-        return None
-
-    ax, ay, az = accel
-    ACCEL_HISTORY.append((ax, ay, az))
-
-    if len(ACCEL_HISTORY) < 3:
-        return None
-
-    if not is_vertical_spike(ax, ay, az):
-        return None
-
-    z_values = [z for _, _, z in ACCEL_HISTORY]
-
-    if detect_impact_pattern(z_values) and can_trigger():
+    # 🚨 POTHOLE → sharp spike
+    if vertical_spike > POTHOLE_IMPACT:
+        last_event_time = now
         return {
             "hazard": "pothole",
-            "confidence": round(random.uniform(0.85, 0.95), 2)
+            "confidence": round(random.uniform(0.88, 0.96), 2)
         }
 
-    return None
+    # 🚧 SPEED BUMP → medium spike (smooth up/down)
+    if SPEED_BUMP_RANGE[0] < vertical_spike <= SPEED_BUMP_RANGE[1]:
+        last_event_time = now
+        return {
+            "hazard": "speed_bump",
+            "confidence": round(random.uniform(0.80, 0.90), 2)
+        }
 
-
-def detect_motion(speed, accel):
-    ax, ay, az = accel
-    mag = magnitude(ax, ay, az)
-
-    if speed > 10:
-        return "moving"
-    elif mag > 12:
-        return "rough"
-    return "stable"
-
-def detect_rough_road(accel, speed=0):
-    """Detect rough road conditions based on sustained vibrations."""
-    if speed < MIN_SPEED_THRESHOLD:
-        return None
-
-    ax, ay, az = accel
-    mag = magnitude(ax, ay, az)
-
-    # Check for moderate but sustained vibrations (rough road)
-    if mag > ROUGH_ROAD_THRESHOLD and can_trigger():
+    # ⚠️ ROUGH ROAD → continuous vibration
+    if vertical_spike > ROUGH_THRESHOLD:
         return {
             "hazard": "rough_road",
-            "confidence": round(random.uniform(0.75, 0.88), 2)
+            "confidence": round(random.uniform(0.75, 0.85), 2)
         }
 
-    return None
-
-
-def smart_prediction(sensor_data):
-    accel = sensor_data["accel"]
-    speed = sensor_data.get("speed", 0)
-
-    # Check for potholes first (higher priority)
-    pothole = detect_pothole(accel, speed)
-    if pothole:
-        return pothole
-
-    # Check for rough roads
-    rough_road = detect_rough_road(accel, speed)
-    if rough_road:
-        return rough_road
-
-    # No hazards detected
-    motion = detect_motion(speed, accel)
     return {
         "hazard": "clear",
-        "motion": motion,
         "confidence": round(random.uniform(0.92, 0.98), 2)
     }

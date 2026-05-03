@@ -41,7 +41,10 @@ STAGE1_MODEL = MODEL_DIR / "stage1_binary_v2.keras"
 STAGE2_MODEL = MODEL_DIR / "stage2_subtype_v2.keras"
 
 PRODUCTION = os.getenv("PRODUCTION", "false").lower() == "true"
+USE_ML = os.getenv("USE_ML", "false").lower() == "true"
 DISABLE_ML = os.getenv("DISABLE_ML", "false").lower() == "true"
+if DISABLE_ML:
+    USE_ML = False
 
 stage1_model = None
 stage2_model = None
@@ -214,6 +217,24 @@ def _sensor_inference_dummy():
     return label, confidence, "sensor_dummy"
 
 
+def _sensor_models_loaded():
+    return stage1_model is not None and stage2_model is not None
+
+
+def _mobile_ml_predict(accel, speed=0):
+    if not _sensor_models_loaded():
+        raise RuntimeError("Sensor ML models are unavailable")
+
+    seq = AccelSegment(x=[accel[0]], y=[accel[1]], z=[accel[2]])
+    arr = _accel_to_array(seq)
+    label, confidence, source = _sensor_inference(arr)
+    return {
+        "hazard": label.lower().replace(" ", "_"),
+        "confidence": confidence,
+        "source": source,
+    }
+
+
 def _sensor_inference(arr: np.ndarray):
     if DISABLE_ML:
         return _sensor_inference_dummy()
@@ -367,12 +388,15 @@ async def process_mobile_sensor_data(sensor_data, websocket):
             if len(accel_reading) >= 3:
                 ax, ay, az = accel_reading[:3]
                 
-                # Use smart prediction
-                result = smart_prediction({
-                    "accel": [ax, ay, az],
-                    "speed": speed
-                })
-                
+                # Use ML only when enabled and models are loaded; otherwise fall back to smart prediction.
+                if USE_ML and _sensor_models_loaded():
+                    result = _mobile_ml_predict([ax, ay, az], speed)
+                else:
+                    result = smart_prediction({
+                        "accel": [ax, ay, az],
+                        "speed": speed
+                    })
+
                 if result.get("hazard") in ["pothole", "speedbreaker"]:
                     hazard_detected = True
                     hazard_type = result["hazard"]
