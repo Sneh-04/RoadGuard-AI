@@ -14,6 +14,7 @@ Endpoints:
 import asyncio
 import base64
 import io
+import json
 import logging
 import os
 import time
@@ -31,6 +32,7 @@ from pydantic import BaseModel, Field
 # Import admin modules
 from .database import init_db, close_db
 from .routes import router as admin_router
+from .sensor_detection import smart_prediction
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 MODEL_DIR = BASE_DIR / "models"
@@ -139,6 +141,7 @@ class SensorRequest(BaseModel):
     latitude: float = 0.0
     longitude: float = 0.0
     timestamp: Optional[str] = None
+    speed: Optional[float] = None
 
 class MultimodalRequest(BaseModel):
     accel: AccelSegment
@@ -347,6 +350,78 @@ def _store_event(label_id, label, confidence, p_sensor, p_vision, lat, lon, ts, 
         events.pop(0)
     return event
 
+async def process_mobile_sensor_data(sensor_data, websocket):
+    """Process sensor data from mobile app using smart prediction."""
+    try:
+        sensor_readings = sensor_data.get("sensor", [])
+        location = sensor_data.get("location", {})
+        lat = location.get("lat", 0.0)
+        lng = location.get("lng", 0.0)
+        speed = sensor_data.get("speed", 0)  # Get speed from mobile app
+        
+        # Process each accelerometer reading
+        hazard_detected = False
+        hazard_type = None
+        
+        for accel_reading in sensor_readings:
+            if len(accel_reading) >= 3:
+                ax, ay, az = accel_reading[:3]
+                
+                # Use smart prediction
+                result = smart_prediction({
+                    "accel": [ax, ay, az],
+                    "speed": speed
+                })
+                
+                if result.get("hazard") in ["pothole", "speedbreaker"]:
+                    hazard_detected = True
+                    hazard_type = result["hazard"]
+                    confidence = result.get("confidence", 0.8)
+                    
+                    # Store event
+                    label_id = 1 if hazard_type == "pothole" else 2
+                    event = _store_event(
+                        label_id=label_id,
+                        label=hazard_type.upper(),
+                        confidence=confidence,
+                        p_sensor=confidence,
+                        p_vision=None,
+                        lat=lat,
+                        lon=lng,
+                        ts=datetime.utcnow().isoformat(),
+                        source="mobile_sensor"
+                    )
+                    
+                    # Broadcast to all clients
+                    await manager.broadcast({"type": "new_event", "event": event})
+                    
+                    # Send alert back to mobile app
+                    alert_data = {
+                        "type": "hazard_alert",
+                        "hazard_detected": True,
+                        "hazard_type": hazard_type,
+                        "confidence": confidence,
+                        "location": {"lat": lat, "lng": lng}
+                    }
+                    await manager.send_personal_message(alert_data, websocket)
+                    
+                    break  # Only report first hazard in batch
+        
+        # If no hazard detected, send clear status
+        if not hazard_detected:
+            clear_data = {
+                "type": "status",
+                "hazard_detected": False,
+                "message": "Road clear"
+            }
+            await manager.send_personal_message(clear_data, websocket)
+            
+    except Exception as e:
+        logger.error(f"Error processing mobile sensor data: {e}")
+        await manager.send_personal_message({
+            "type": "error",
+            "message": "Failed to process sensor data"
+        }, websocket)
 # ── Startup ───────────────────────────────────────────────────────────────────
 @app.on_event("startup")
 async def startup():
@@ -599,6 +674,16 @@ async def websocket_events(websocket: WebSocket):
             data = await websocket.receive_text()
             if data == "ping":
                 await websocket.send_text('{"type":"pong"}')
+            else:
+                try:
+                    # Process sensor data from mobile app
+                    sensor_data = json.loads(data)
+                    if sensor_data.get("mode") == "sensor":
+                        await process_mobile_sensor_data(sensor_data, websocket)
+                except json.JSONDecodeError:
+                    logger.warning(f"Invalid JSON received: {data}")
+                except Exception as e:
+                    logger.error(f"Error processing sensor data: {e}")
     except WebSocketDisconnect:
         manager.disconnect(websocket)
         logger.info(f"WS client disconnected. Remaining: {len(manager.active_connections)}")

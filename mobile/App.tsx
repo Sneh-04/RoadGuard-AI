@@ -1,30 +1,38 @@
 import { useEffect, useRef, useState } from "react";
-import { Text, View } from "react-native";
+import { Text, View, Vibration, ToastAndroid } from "react-native";
 import { Accelerometer } from "expo-sensors";
 import * as Location from "expo-location";
 
 export default function App() {
-  const ws = useRef(null);
-  const buffer = useRef([]);
+  const ws = useRef<WebSocket | null>(null);
+  const buffer = useRef<number[][]>([]);
   const [status, setStatus] = useState("Connecting...");
-  const [lastAlert, setLastAlert] = useState(null);
+  const [lastAlert, setLastAlert] = useState<string | null>(null);
 
   // 🔌 Connect WebSocket
   useEffect(() => {
-    ws.current = new WebSocket("ws://YOUR-IP:8000/ws/live");
+    ws.current = new WebSocket("wss://roadguard-ai-3.onrender.com/ws/live");
 
     ws.current.onopen = () => {
       console.log("Connected to backend");
       setStatus("Connected ✅");
     };
 
-    ws.current.onmessage = (e) => {
+    ws.current.onmessage = (e: MessageEvent) => {
       const data = JSON.parse(e.data);
       console.log("Result:", data);
 
-      if (data.hazard_detected) {
-        setLastAlert(data.hazard_type);
-        alert(`⚠️ ${data.hazard_type} detected!`);
+      if (data.type === "hazard_alert" && data.hazard_detected) {
+        const hazardType = data.hazard_type;
+        setLastAlert(`${hazardType} (${new Date().toLocaleTimeString()})`);
+
+        // Vibrate for 500ms
+        Vibration.vibrate(500);
+
+        // Show toast notification
+        ToastAndroid.show(`⚠️ ${hazardType} detected!`, ToastAndroid.SHORT);
+      } else if (data.type === "status") {
+        console.log("Status:", data.message);
       }
     };
 
@@ -63,6 +71,7 @@ export default function App() {
               lat: location.latitude,
               lng: location.longitude,
             },
+            speed: location.speed || 0,  // Add speed data
             mode: "sensor",
           })
         );
@@ -75,10 +84,24 @@ export default function App() {
   }, []);
 
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>🚗 RoadGuard Mobile</Text>
-      <Text>Status: {status}</Text>
-      {lastAlert && <Text>⚠️ Last Alert: {lastAlert}</Text>}
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center", padding: 20 }}>
+      <Text style={{ fontSize: 24, marginBottom: 20 }}>🚗 RoadGuard Mobile</Text>
+      <Text style={{ fontSize: 16, marginBottom: 10 }}>Status: {status}</Text>
+      {lastAlert && (
+        <View style={{
+          backgroundColor: '#ffebee',
+          padding: 15,
+          borderRadius: 10,
+          borderWidth: 1,
+          borderColor: '#f44336',
+          marginTop: 20,
+          width: '100%'
+        }}>
+          <Text style={{ fontSize: 16, color: '#d32f2f', textAlign: 'center' }}>
+            ⚠️ Last Alert: {lastAlert}
+          </Text>
+        </View>
+      )}
     </View>
   );
 }
