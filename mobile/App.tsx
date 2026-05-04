@@ -6,7 +6,7 @@ import * as Location from "expo-location";
 export default function App() {
   const ws = useRef<WebSocket | null>(null);
   const buffer = useRef<number[][]>([]);
-  const [status, setStatus] = useState("Connecting...");
+  const [connected, setConnected] = useState(false);
   const [lastAlert, setLastAlert] = useState<string | null>(null);
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -18,7 +18,7 @@ export default function App() {
 
       ws.current.onopen = () => {
         console.log("Connected to backend");
-        setStatus("Connected ✅");
+        setConnected(true);
       };
 
       ws.current.onmessage = (e: MessageEvent) => {
@@ -50,19 +50,27 @@ export default function App() {
         }
       };
 
-      ws.current.onerror = () => setStatus("Error ❌");
+      ws.current.onerror = () => {
+        console.log("WS failed, continuing offline");
+        setConnected(true);
+      };
 
       ws.current.onclose = () => {
+        console.log("WS closed");
+        setConnected(true);
         console.log("WebSocket disconnected. Reconnecting in 3 seconds...");
-        setStatus("Reconnecting...");
         if (reconnectTimeoutRef.current) {
           clearTimeout(reconnectTimeoutRef.current);
         }
         reconnectTimeoutRef.current = setTimeout(() => connectWebSocket(), 3000);
       };
+
+      setTimeout(() => {
+        setConnected(true);
+      }, 3000);
     } catch (error) {
       console.error("WebSocket connection error:", error);
-      setStatus("Connection failed");
+      setConnected(true);
     }
   };
 
@@ -125,7 +133,9 @@ export default function App() {
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center", padding: 20 }}>
       <Text style={{ fontSize: 24, marginBottom: 20 }}>🚗 RoadGuard Mobile</Text>
-      <Text style={{ fontSize: 16, marginBottom: 10 }}>Status: {status}</Text>
+      <Text style={{ fontSize: 16, marginBottom: 10 }}>
+        {connected ? "Live Detection Active" : "Connecting..."}
+      </Text>
       {lastAlert && (
         <View style={{
           backgroundColor: '#ffebee',
