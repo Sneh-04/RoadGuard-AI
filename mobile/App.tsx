@@ -76,6 +76,7 @@ export default function App() {
 
   // 🔌 Connect WebSocket
   useEffect(() => {
+    console.log("App mounted: connecting WebSocket...");
     connectWebSocket();
 
     return () => {
@@ -90,8 +91,13 @@ export default function App() {
 
   // 📍 Get Location
   const getLocation = async () => {
-    let loc = await Location.getCurrentPositionAsync({});
-    return loc.coords;
+    try {
+      let loc = await Location.getCurrentPositionAsync({});
+      return loc.coords;
+    } catch (error) {
+      console.warn("Unable to get current location", error);
+      return { latitude: null, longitude: null, speed: 0 };
+    }
   };
 
   // 🔐 Request Permissions
@@ -111,17 +117,27 @@ export default function App() {
       if (buffer.current.length === 100) {
         const location = await getLocation();
 
-        ws.current.send(
-          JSON.stringify({
-            sensor: buffer.current,
-            location: {
-              lat: location.latitude,
-              lng: location.longitude,
-            },
-            speed: location.speed || 0,  // Add speed data
-            mode: "sensor",
-          })
-        );
+        if (!location?.latitude || !location?.longitude) {
+          console.warn("Skipping sensor send because location is unavailable", location);
+        } else if (!ws.current || ws.current.readyState !== WebSocket.OPEN) {
+          console.log("WebSocket is not open, skipping sensor send", ws.current?.readyState);
+        } else {
+          console.log("Sending sensor packet", {
+            sensorCount: buffer.current.length,
+            speed: location.speed || 0,
+          });
+          ws.current.send(
+            JSON.stringify({
+              sensor: buffer.current,
+              location: {
+                lat: location.latitude,
+                lng: location.longitude,
+              },
+              speed: location.speed || 0,
+              mode: "sensor",
+            })
+          );
+        }
 
         buffer.current = [];
       }

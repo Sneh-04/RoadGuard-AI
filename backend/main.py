@@ -397,9 +397,10 @@ async def process_mobile_sensor_data(sensor_data, websocket):
                         "speed": speed
                     })
 
-                if result.get("hazard") in ["pothole", "speedbreaker"]:
+                hazard = result.get("hazard")
+                if hazard and hazard != "clear":
                     hazard_detected = True
-                    hazard_type = result["hazard"]
+                    hazard_type = hazard
                     confidence = result.get("confidence", 0.8)
                     
                     # Store event
@@ -714,7 +715,9 @@ async def websocket_events(websocket: WebSocket):
     except Exception as e:
         logger.error(f"❌ WebSocket error: {e}", exc_info=True)
         manager.disconnect(websocket)
-
+@app.websocket("/ws/live")
+async def websocket_live(websocket: WebSocket):
+    return await websocket_events(websocket)
 # ── Server startup ────────────────────────────────────────────────────────────
 if __name__ == "__main__":
     import uvicorn
