@@ -1,0 +1,28 @@
+/Users/pawankumar/Desktop/RoadGuard_Final/backend/main.py:136: PydanticDeprecatedSince20: `min_items` is deprecated and will be removed, use `min_length` instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+  x: List[float] = Field(..., min_items=10)
+/Users/pawankumar/Desktop/RoadGuard_Final/backend/main.py:137: PydanticDeprecatedSince20: `min_items` is deprecated and will be removed, use `min_length` instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+  y: List[float] = Field(..., min_items=10)
+/Users/pawankumar/Desktop/RoadGuard_Final/backend/main.py:138: PydanticDeprecatedSince20: `min_items` is deprecated and will be removed, use `min_length` instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+  z: List[float] = Field(..., min_items=10)
+/Users/pawankumar/Desktop/RoadGuard_Final/backend/main.py:282: DeprecationWarning: 
+        on_event is deprecated, use lifespan event handlers instead.
+
+        Read more about it in the
+        [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+        
+  @app.on_event("startup")
+/Users/pawankumar/Desktop/RoadGuard_Final/backend/main.py:290: DeprecationWarning: 
+        on_event is deprecated, use lifespan event handlers instead.
+
+        Read more about it in the
+        [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+        
+  @app.on_event("shutdown")
+INFO:     Started server process [17278]
+INFO:     Waiting for application startup.
+WARNING:database:Failed to connect to MongoDB: localhost:27017: [Errno 61] Connection refused (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 30s, Topology Description: <TopologyDescription id: 69db758fceb233450c4788c7, topology_type: Unknown, servers: [<ServerDescription ('localhost', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('localhost:27017: [Errno 61] Connection refused (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>. Using in-memory storage.
+INFO:roadguard:RoadGuard-AI API ready
+INFO:     Application startup complete.
+ERROR:    [Errno 48] error while attempting to bind on address ('127.0.0.1', 8002): address already in use
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.

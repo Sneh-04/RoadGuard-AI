@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 2
+names: ['pothole', 'speed-bump']
+
+roboflow:
+  workspace: bhavyasree
+  project: potholespeedbump_detection
+  version: 1
+  license: MIT
+  url: https://universe.roboflow.com/bhavyasree/potholespeedbump_detection/dataset/1

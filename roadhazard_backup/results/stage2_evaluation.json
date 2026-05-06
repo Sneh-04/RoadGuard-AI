@@ -1,0 +1,24 @@
+{
+  "model": "stage2_subtype_v2.keras",
+  "test_loss": 0.5919409394264221,
+  "test_accuracy": 0.6851851940155029,
+  "precision": 0.03333333333333333,
+  "recall": 0.16666666666666666,
+  "f1_score": 0.05555555555555555,
+  "roc_auc": 0.36111111111111116,
+  "confusion_matrix": [
+    [
+      73,
+      29
+    ],
+    [
+      5,
+      1
+    ]
+  ],
+  "dataset_split": {
+    "total_test_hazards": 108,
+    "speedbreaker_count": 102,
+    "pothole_count": 6
+  }
+}

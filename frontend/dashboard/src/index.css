@@ -1,0 +1,60 @@
+/* ===== ROADGUARD THEME - GREEN/TEAL COLOR SCHEME ===== */
+:root {
+  /* Global Background & Text */
+  --bg-primary: #021c1a;
+  --text-primary: #e6fffa;
+  --text-secondary: #7dd3c7;
+  
+  /* Cards & Containers */
+  --bg-card: #062f2a;
+  --border-card: #0f3f3a;
+  
+  /* Accent - Glowing Green */
+  --accent: #00c9a7;
+  --accent-hover: #00b89a;
+  
+  /* Input Fields */
+  --bg-input: #021c1a;
+  --border-input: #0f3f3a;
+  
+  /* Navigation */
+  --nav-inactive: #6b7280;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body, #root {
+  height: 100%; width: 100%;
+  overflow: hidden; background: var(--bg-primary);
+  font-family: 'Inter', sans-serif;
+  color: var(--text-primary);
+}
+body { position: fixed; }
+
+@keyframes pulse {
+  0%,100% { opacity:0.3; transform:scale(0.8); }
+  50% { opacity:1; transform:scale(1.2); }
+}
+@keyframes shake {
+  0%,100% { transform:translateX(0); }
+  25% { transform:translateX(-8px); }
+  75% { transform:translateX(8px); }
+}
+
+.app-shell {
+  height: 100vh; height: 100dvh;
+  display: flex; flex-direction: column;
+  overflow: hidden; background: var(--bg-primary);
+}
+.app-frame {
+  flex: 1; overflow-y: auto; overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 80px;
+}
+
+/* Utility Classes for Theme */
+.bg-card { background-color: var(--bg-card); border-color: var(--border-card); }
+.text-primary { color: var(--text-primary); }
+.text-secondary { color: var(--text-secondary); }
+.accent { color: var(--accent); }
+.btn-primary { background-color: var(--accent); color: black; font-weight: 600; }
+.btn-primary:hover { background-color: var(--accent-hover); }

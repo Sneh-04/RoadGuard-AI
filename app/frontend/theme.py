@@ -1,0 +1,17 @@
+"""Theme configuration for frontend (light/dark)."""
+THEMES = {
+    "light": {
+        "background": "#ffffff",
+        "card": "#f7f7f8",
+        "text": "#0f172a",
+        "accent": "#0066ff"
+    },
+    "dark": {
+        "background": "#0b1220",
+        "card": "#0f172a",
+        "text": "#e6eef8",
+        "accent": "#4f9cff"
+    }
+}
+
+DEFAULT_THEME = "light"

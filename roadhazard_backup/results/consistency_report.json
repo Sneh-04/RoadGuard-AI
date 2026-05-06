@@ -1,0 +1,436 @@
+{
+  "data_files": {
+    "X_train.npy": {
+      "exists": true,
+      "shape": [
+        611,
+        100,
+        3
+      ]
+    },
+    "y_train.npy": {
+      "exists": true,
+      "shape": [
+        611
+      ]
+    },
+    "X_val.npy": {
+      "exists": true,
+      "shape": [
+        131,
+        100,
+        3
+      ]
+    },
+    "y_val.npy": {
+      "exists": true,
+      "shape": [
+        131
+      ]
+    },
+    "X_test.npy": {
+      "exists": true,
+      "shape": [
+        132,
+        100,
+        3
+      ]
+    },
+    "y_test.npy": {
+      "exists": true,
+      "shape": [
+        132
+      ]
+    }
+  },
+  "static_scan": {
+    "compare_cascaded_vs_3class.py": [],
+    "model_complexity.py": [],
+    "train_stage2_subtype.py": [
+      {
+        "lineno": 84,
+        "line": "monitor=\"val_loss\","
+      }
+    ],
+    "single_pipeline.py": [],
+    "train_stage1_binary.py": [
+      {
+        "lineno": 77,
+        "line": "monitor=\"val_loss\","
+      },
+      {
+        "lineno": 83,
+        "line": "monitor=\"val_loss\","
+      }
+    ],
+    "augmentation.py": [
+      {
+        "lineno": 38,
+        "line": "def augment_batch(X):"
+      }
+    ],
+    "ablation_study.py": [
+      {
+        "lineno": 99,
+        "line": "tr_data = augment_batch(X_tr) if use_aug else X_tr"
+      },
+      {
+        "lineno": 113,
+        "line": "tr2_data = augment_batch(X_tr_hz) if use_aug else X_tr_hz"
+      },
+      {
+        "lineno": 136,
+        "line": "tr_data = augment_batch(X_tr) if use_aug else X_tr"
+      }
+    ],
+    "train_3class_baseline.py": [
+      {
+        "lineno": 31,
+        "line": "X_test = np.load(os.path.join(data_dir, 'X_test.npy'))"
+      },
+      {
+        "lineno": 31,
+        "line": "X_test = np.load(os.path.join(data_dir, 'X_test.npy'))"
+      },
+      {
+        "lineno": 124,
+        "line": "preds = final_model.predict(X_test)"
+      },
+      {
+        "lineno": 31,
+        "line": "X_test = np.load(os.path.join(data_dir, 'X_test.npy'))"
+      },
+      {
+        "lineno": 75,
+        "line": "X_tr_aug = augment_batch(X_tr)"
+      },
+      {
+        "lineno": 115,
+        "line": "final_model.fit(augment_batch(X_train), y_train_3, validation_data=(X_val, y_val_3),"
+      }
+    ],
+    "train_stage1_improved.py": [
+      {
+        "lineno": 81,
+        "line": "X_test = np.load(os.path.join(DATA_DIR, \"X_test.npy\"))"
+      },
+      {
+        "lineno": 81,
+        "line": "X_test = np.load(os.path.join(DATA_DIR, \"X_test.npy\"))"
+      },
+      {
+        "lineno": 88,
+        "line": "print(f\"X_test shape: {X_test.shape}\")"
+      },
+      {
+        "lineno": 88,
+        "line": "print(f\"X_test shape: {X_test.shape}\")"
+      },
+      {
+        "lineno": 194,
+        "line": "test_loss, test_acc = model.evaluate(X_test, y_test_bin, verbose=0)"
+      },
+      {
+        "lineno": 200,
+        "line": "y_pred_proba = model.predict(X_test, verbose=0)"
+      },
+      {
+        "lineno": 81,
+        "line": "X_test = np.load(os.path.join(DATA_DIR, \"X_test.npy\"))"
+      },
+      {
+        "lineno": 156,
+        "line": "monitor=\"val_loss\","
+      },
+      {
+        "lineno": 163,
+        "line": "monitor=\"val_loss\","
+      },
+      {
+        "lineno": 354,
+        "line": "callbacks=[EarlyStopping(monitor=\"val_loss\", patience=5, restore_best_weights=True)],"
+      }
+    ],
+    "improved_backend.py": [],
+    "train_stage2_improved.py": [
+      {
+        "lineno": 88,
+        "line": "X_test = np.load(os.path.join(DATA_DIR, \"X_test.npy\"))"
+      },
+      {
+        "lineno": 88,
+        "line": "X_test = np.load(os.path.join(DATA_DIR, \"X_test.npy\"))"
+      },
+      {
+        "lineno": 105,
+        "line": "X_test_hazard = X_test[test_mask]"
+      },
+      {
+        "lineno": 112,
+        "line": "print(f\"Filtered X_test shape: {X_test_hazard.shape}\")"
+      },
+      {
+        "lineno": 88,
+        "line": "X_test = np.load(os.path.join(DATA_DIR, \"X_test.npy\"))"
+      },
+      {
+        "lineno": 204,
+        "line": "augment_batch(X_train_hazard), y_train_bin,"
+      },
+      {
+        "lineno": 363,
+        "line": "X_fold_train_aug = augment_batch(X_fold_train)"
+      },
+      {
+        "lineno": 186,
+        "line": "monitor=\"val_loss\","
+      },
+      {
+        "lineno": 193,
+        "line": "monitor=\"val_loss\","
+      },
+      {
+        "lineno": 389,
+        "line": "callbacks=[EarlyStopping(monitor=\"val_loss\", patience=6, restore_best_weights=True)],"
+      }
+    ],
+    "ex.py": [],
+    "test_synthetic_sensor.py": [],
+    "test_sensor_models.py": [
+      {
+        "lineno": 13,
+        "line": "REAL_DATA_PATH = \"data/processed_accel_only_fixed/X_test.npy\"  # path to .npy file if you want real data"
+      },
+      {
+        "lineno": 13,
+        "line": "REAL_DATA_PATH = \"data/processed_accel_only_fixed/X_test.npy\"  # path to .npy file if you want real data"
+      }
+    ],
+    "evaluate_models.py": [
+      {
+        "lineno": 34,
+        "line": "X_test = np.load(os.path.join(DATA_DIR, \"X_test.npy\"))"
+      },
+      {
+        "lineno": 34,
+        "line": "X_test = np.load(os.path.join(DATA_DIR, \"X_test.npy\"))"
+      },
+      {
+        "lineno": 36,
+        "line": "print(f\"X_test shape: {X_test.shape}\")"
+      },
+      {
+        "lineno": 36,
+        "line": "print(f\"X_test shape: {X_test.shape}\")"
+      },
+      {
+        "lineno": 63,
+        "line": "y_pred_proba_s1 = stage1_model.predict(X_test, verbose=0)"
+      },
+      {
+        "lineno": 67,
+        "line": "loss_s1, acc_s1 = stage1_model.evaluate(X_test, y_test_bin, verbose=0)"
+      },
+      {
+        "lineno": 145,
+        "line": "X_test_hazard = X_test[hazard_mask]"
+      },
+      {
+        "lineno": 34,
+        "line": "X_test = np.load(os.path.join(DATA_DIR, \"X_test.npy\"))"
+      }
+    ],
+    "generate_dataset_report.py": [
+      {
+        "lineno": 37,
+        "line": "X_test = np.load(os.path.join(DATA_DIR, \"X_test.npy\"))"
+      },
+      {
+        "lineno": 37,
+        "line": "X_test = np.load(os.path.join(DATA_DIR, \"X_test.npy\"))"
+      },
+      {
+        "lineno": 40,
+        "line": "X_all = np.concatenate([X_train, X_val, X_test], axis=0)"
+      },
+      {
+        "lineno": 37,
+        "line": "X_test = np.load(os.path.join(DATA_DIR, \"X_test.npy\"))"
+      }
+    ],
+    "consistency_audit.py": [
+      {
+        "lineno": 120,
+        "line": "for name in ['X_train.npy','y_train.npy','X_val.npy','y_val.npy','X_test.npy','y_test.npy']:"
+      },
+      {
+        "lineno": 134,
+        "line": "'loads_X_test_file': r'X_test\\.npy',"
+      },
+      {
+        "lineno": 162,
+        "line": "X_test = np.load(os.path.join(DATA_DIR, 'X_test.npy'))"
+      },
+      {
+        "lineno": 162,
+        "line": "X_test = np.load(os.path.join(DATA_DIR, 'X_test.npy'))"
+      },
+      {
+        "lineno": 165,
+        "line": "X_test, y_test = None, None"
+      },
+      {
+        "lineno": 171,
+        "line": "if X_test is not None and os.path.exists(three_model_path):"
+      },
+      {
+        "lineno": 174,
+        "line": "res = evaluate_saved_model_on_test(three_model_path, X_test, y_test)"
+      },
+      {
+        "lineno": 186,
+        "line": "if X_test is not None and os.path.exists(s1) and os.path.exists(s2):"
+      },
+      {
+        "lineno": 192,
+        "line": "p1 = (m1.predict(X_test, verbose=0) > 0.5).astype(int).flatten()"
+      },
+      {
+        "lineno": 197,
+        "line": "# prepare stage2 input: filter X_test"
+      },
+      {
+        "lineno": 198,
+        "line": "p2_proba = m2.predict(X_test[hazard_idx], verbose=0)"
+      },
+      {
+        "lineno": 120,
+        "line": "for name in ['X_train.npy','y_train.npy','X_val.npy','y_val.npy','X_test.npy','y_test.npy']:"
+      },
+      {
+        "lineno": 162,
+        "line": "X_test = np.load(os.path.join(DATA_DIR, 'X_test.npy'))"
+      }
+    ]
+  },
+  "augmentation_calls": [
+    {
+      "file": "augmentation.py",
+      "lineno": 38,
+      "line": "def augment_batch(X):"
+    },
+    {
+      "file": "ablation_study.py",
+      "lineno": 99,
+      "line": "tr_data = augment_batch(X_tr) if use_aug else X_tr"
+    },
+    {
+      "file": "ablation_study.py",
+      "lineno": 113,
+      "line": "tr2_data = augment_batch(X_tr_hz) if use_aug else X_tr_hz"
+    },
+    {
+      "file": "ablation_study.py",
+      "lineno": 136,
+      "line": "tr_data = augment_batch(X_tr) if use_aug else X_tr"
+    },
+    {
+      "file": "train_3class_baseline.py",
+      "lineno": 75,
+      "line": "X_tr_aug = augment_batch(X_tr)"
+    },
+    {
+      "file": "train_3class_baseline.py",
+      "lineno": 115,
+      "line": "final_model.fit(augment_batch(X_train), y_train_3, validation_data=(X_val, y_val_3),"
+    },
+    {
+      "file": "train_stage2_improved.py",
+      "lineno": 204,
+      "line": "augment_batch(X_train_hazard), y_train_bin,"
+    },
+    {
+      "file": "train_stage2_improved.py",
+      "lineno": 363,
+      "line": "X_fold_train_aug = augment_batch(X_fold_train)"
+    }
+  ],
+  "recomputed_cv": {
+    "3class_cv": {
+      "found": true,
+      "n_folds": 5,
+      "mean": 0.6202985525131226,
+      "std": 0.06866272090242072,
+      "accuracies": [
+        0.6178861856460571,
+        0.5491803288459778,
+        0.5409836173057556,
+        0.7131147384643555,
+        0.6803278923034668
+      ]
+    },
+    "ablation": {
+      "found": true,
+      "n_folds": 5,
+      "mean": 0.18821804611488738,
+      "std": 0.03399969425529502,
+      "accuracies": [
+        0.18699186991869918,
+        0.23770491803278687,
+        0.19672131147540983,
+        0.13114754098360656,
+        0.1885245901639344
+      ]
+    },
+    "cv_comparison": {
+      "found": false
+    },
+    "stage1_cv": {
+      "found": true,
+      "n_folds": 5,
+      "mean": 0.834679461548714,
+      "std": 0.022354615811416546,
+      "accuracies": [
+        0.8455284552845529,
+        0.7950819672131147,
+        0.8442622950819673,
+        0.860655737704918,
+        0.8278688524590164
+      ]
+    },
+    "stage2_cv": {
+      "found": true,
+      "n_folds": 5,
+      "mean": 0.7671111111111111,
+      "std": 0.13413725501645188,
+      "accuracies": [
+        0.91,
+        0.57,
+        0.8,
+        0.898989898989899,
+        0.6565656565656566
+      ]
+    }
+  },
+  "model_checks": {
+    "3class_baseline.keras": {
+      "loaded": true,
+      "accuracy": 0.42424242424242425,
+      "reported_accuracy": 0.42424242424242425
+    },
+    "cascaded_models": {
+      "loaded": true,
+      "cascaded_test_accuracy": 0.553030303030303,
+      "stage1_reported": 0.8030303120613098,
+      "stage2_reported": 0.6666666865348816
+    }
+  },
+  "skf_uses_random_state": {
+    "compare_cascaded_vs_3class.py": false,
+    "ablation_study.py": false,
+    "train_3class_baseline.py": false,
+    "train_stage1_improved.py": false,
+    "train_stage2_improved.py": false,
+    "consistency_audit.py": false
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "appId": "com.roadguard.app",
+  "appName": "roadguard.ai",
+  "webDir": "dist",
+  "bundledWebRuntime": false
+}
